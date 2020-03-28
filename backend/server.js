@@ -17,10 +17,10 @@ connection.once('open', () => {
   console.log('MongoDB database connection established successfully');
 });
 
-const companyRouter = require('./routes/company');
+const companyRouter = require('./routes/companies');
 const productionPlanRouter = require('./routes/productionPlan');
 
-app.use('/company', companyRouter);
+app.use('/companies', companyRouter);
 app.use('/production-plan', productionPlanRouter);
 
 app.listen(port, () => {

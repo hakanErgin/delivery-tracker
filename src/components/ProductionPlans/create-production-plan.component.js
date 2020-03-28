@@ -16,6 +16,7 @@ export default class CreateProductionPlan extends Component {
 
     this.state = {
       productionPlanId: '',
+      companies: [],
       company: '',
       codes: [{ code: '', quantity: 0 }],
       date: new Date()
@@ -24,16 +25,11 @@ export default class CreateProductionPlan extends Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:5000/production-plan/')
+      .get('http://localhost:5000/companies/')
       .then(response => {
-        if (response.data.length > 0) {
-          this.setState({
-            productionPlanId: response.data.productionPlanId,
-            company: response.data.company,
-            codes: response.data.map(code => code.code),
-            date: response.data.date
-          });
-        }
+        console.log('response', response);
+        this.setState({ companies: response.data });
+        console.log('state', this.state);
       })
       .catch(error => {
         console.log(error);
@@ -77,9 +73,8 @@ export default class CreateProductionPlan extends Component {
 
     axios
       .post('http://localhost:5000/production-plan/add', productionPlan)
-      .then(res => console.log(res.data));
-
-    // window.location = '/';
+      .then(res => console.log(res.data))
+      .then(() => (window.location = '/production-plan'));
   }
 
   render() {
@@ -87,25 +82,6 @@ export default class CreateProductionPlan extends Component {
       <div>
         <h3>Create New Production Plan</h3>
         <form onSubmit={this.onSubmit}>
-          {/* <div className="form-group">
-            <label>Production Plan Id : </label>
-            <select
-              name="id"
-              ref="idInput"
-              required
-              className="form-control"
-              value={this.state.id}
-              onChange={this.handleChange}
-            >
-              {this.state.company.map(function(company) {
-                return (
-                  <option key={company} value={company}>
-                    {company}
-                  </option>
-                );
-              })}
-            </select>
-          </div> */}
           <div className="form-group">
             <label>Production Plan Id : </label>
             <input
@@ -118,14 +94,27 @@ export default class CreateProductionPlan extends Component {
             />
           </div>
           <div className="form-group">
-            <label>Company: </label>
-            <input
+            <label>Company : </label>
+            <select
               name="company"
-              type="text"
+              ref="company"
+              required
               className="form-control"
               value={this.state.company}
               onChange={this.handleChange}
-            />
+            >
+              {this.state.companies &&
+                this.state.companies.map(function(company) {
+                  return (
+                    <option
+                      key={company.companyName}
+                      value={company.companyName}
+                    >
+                      {company.companyName}
+                    </option>
+                  );
+                })}
+            </select>
           </div>
           <div className="form-group">
             <label>Code: </label>
