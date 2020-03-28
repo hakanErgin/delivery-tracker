@@ -8,10 +8,8 @@ const ProductionPlanSchema = new Schema({
     type: String,
     required: true
   },
-  codes: [{ code: String, quantity: Number }] || {
-    code: String,
-    quantity: Number
-  },
+  code: String,
+  quantity: Number,
   date: Date
 });
 

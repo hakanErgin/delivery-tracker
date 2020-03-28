@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
+
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default class CreateProductionPlan extends Component {
+export default class EditProductionPlan extends Component {
   constructor(props) {
     super(props);
 
@@ -11,20 +12,40 @@ export default class CreateProductionPlan extends Component {
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onChangeCode = this.onChangeCode.bind(this);
     this.onChangeQuantity = this.onChangeQuantity.bind(this);
+    this.onChangeId = this.onChangeId.bind(this);
 
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
+      id: props.match.params.id,
       productionPlanId: '',
       companies: [],
       company: '',
       code: '',
-      quantity: 0,
-      date: new Date()
+      quantity: '',
+      date: ''
     };
   }
 
   componentDidMount() {
+    axios
+      .get('http://localhost:5000/production-plan/' + this.state.id)
+      .then(response => {
+        console.log(response);
+
+        this.setState({
+          productionPlanId: response.data.productionPlanId,
+          code: response.data.code,
+          quantity: response.data.quantity,
+          company: response.data.company,
+          date: new Date(response.data.date)
+        });
+        console.log('state', this.state);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
     axios
       .get('http://localhost:5000/companies/')
       .then(response => {
@@ -36,6 +57,13 @@ export default class CreateProductionPlan extends Component {
         console.log(error);
       });
     console.log('component mounted. state:', this.state);
+  }
+
+  onChangeId(event) {
+    console.log('event.target.value', event.target.value);
+
+    this.setState({ productionPlanId: event.target.value });
+    console.log('productionPlanId', this.state.productionPlanId);
   }
 
   handleChange(event) {
@@ -71,10 +99,11 @@ export default class CreateProductionPlan extends Component {
       date: this.state.date
     };
 
-    console.log(productionPlan);
-
     axios
-      .post('http://localhost:5000/production-plan/add', productionPlan)
+      .post(
+        'http://localhost:5000/production-plan/update/' + this.state.id,
+        productionPlan
+      )
       .then(res => console.log(res.data))
       .then(() => (window.location = '/'));
   }
@@ -82,17 +111,16 @@ export default class CreateProductionPlan extends Component {
   render() {
     return (
       <div>
-        <h3>Create New Production Plan</h3>
+        <h3>Edit Production Plan</h3>
         <form onSubmit={this.onSubmit}>
           <div className="form-group">
-            <label>Production Plan Id : </label>
+            <label>Production Plan Id :</label>
             <input
-              name="productionPlanId"
               type="text"
               required
               className="form-control"
               value={this.state.productionPlanId}
-              onChange={this.handleChange}
+              onChange={this.onChangeId}
             />
           </div>
           <div className="form-group">
@@ -105,10 +133,6 @@ export default class CreateProductionPlan extends Component {
               value={this.state.company}
               onChange={this.handleChange}
             >
-              <option value="placeholder" selected>
-                Select a Company
-              </option>
-
               {this.state.companies &&
                 this.state.companies.map(function(company) {
                   return (
@@ -149,11 +173,10 @@ export default class CreateProductionPlan extends Component {
               />
             </div>
           </div>
-
           <div className="form-group">
             <input
               type="submit"
-              value="Create Production Plan"
+              value="Edit Production Plan"
               className="btn btn-primary"
             />
           </div>

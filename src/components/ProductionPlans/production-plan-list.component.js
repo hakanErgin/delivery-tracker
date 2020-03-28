@@ -8,14 +8,10 @@ const ProductionPlan = props => (
     <tr>
       <td>{props.productionPlan.productionPlanId}</td>
       <td>{props.productionPlan.company}</td>
-      {props.productionPlan.codes.map(code => {
-        return (
-          <>
-            <td>{code.code}</td>
-            <td>{code.quantity}</td>
-          </>
-        );
-      })}
+
+      <td>{props.productionPlan.code}</td>
+      <td>{props.productionPlan.quantity}</td>
+
       <td>{props.productionPlan.date.substring(0, 10)}</td>
       <td>
         <Link to={'/edit/' + props.productionPlan._id}>edit</Link> |{' '}
@@ -49,6 +45,7 @@ export default class ProductionPlanList extends Component {
       .get('http://localhost:5000/production-plan/')
       .then(response => {
         this.setState({ productionPlans: response.data });
+        console.log('response', response);
       })
       .catch(error => {
         console.log(error);
