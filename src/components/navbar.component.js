@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import CompaniesList from './Companies/CompaniesList';
 
 export default class Navbar extends Component {
   render() {
@@ -12,17 +13,22 @@ export default class Navbar extends Component {
           <ul className="navbar-nav mr-auto">
             <li className="navbar-item">
               <Link to="/" className="nav-link">
-                Procution Plans
+                Production Plans
               </Link>
             </li>
             <li className="navbar-item">
-              <Link to="/create" className="nav-link">
-                Create Production Plan
+              <Link to="/companies" className="nav-link">
+                Companies
               </Link>
             </li>
             <li className="navbar-item">
               <Link to="/user" className="nav-link">
-                Create User
+                Delivery notes
+              </Link>
+            </li>
+            <li className="navbar-item">
+              <Link to="/user" className="nav-link">
+                Invoices
               </Link>
             </li>
           </ul>

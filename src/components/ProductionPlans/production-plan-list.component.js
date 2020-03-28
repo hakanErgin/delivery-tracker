@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import CreateProductionPlan from './create-production-plan.component';
 
 const ProductionPlan = props => (
   <>
@@ -28,7 +29,9 @@ const ProductionPlan = props => (
         </a>
       </td>
     </tr>
-    <hr />
+    <tr>
+      <td>deliveries</td>
+    </tr>
   </>
 );
 
@@ -38,7 +41,7 @@ export default class ProductionPlanList extends Component {
 
     this.deleteProductionPlan = this.deleteProductionPlan.bind(this);
 
-    this.state = { productionPlans: [] };
+    this.state = { productionPlans: [], showAddProductionPlan: false };
   }
 
   componentDidMount() {
@@ -54,13 +57,13 @@ export default class ProductionPlanList extends Component {
 
   deleteProductionPlan(id) {
     axios
-      .delete('http://localhost:5000/production-plan/' + id)
+      .delete('http://localhost:5000/production-plan/delete' + id)
       .then(response => {
         console.log(response.data);
       });
 
     this.setState({
-      productionPlans: this.state.exercises.filter(el => el._id !== id)
+      productionPlans: this.state.productionPlans.filter(el => el._id !== id)
     });
   }
 
@@ -74,6 +77,9 @@ export default class ProductionPlanList extends Component {
         />
       );
     });
+  }
+  addProductionPlan() {
+    this.setState({ showAddProductionPlan: true });
   }
 
   render() {
@@ -92,6 +98,10 @@ export default class ProductionPlanList extends Component {
           </thead>
           <tbody>{this.createProductionPlanList()}</tbody>
         </table>
+        <button onClick={() => this.setState({ showAddProductionPlan: true })}>
+          Add New Production Plan
+        </button>
+        {this.state.showAddProductionPlan && <CreateProductionPlan />}
       </div>
     );
   }

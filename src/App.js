@@ -3,10 +3,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navbar from './components/navbar.component';
-import ProductionPlanList from './components/production-plan-list.component';
-import EditExercise from './components/edit-exercise.component';
-import CreateProductionPlan from './components/create-production-plan.component';
+import ProductionPlanList from './components/ProductionPlans/production-plan-list.component';
+import EditCompany from './components/Companies/EditCompany';
 import CreateUser from './components/create-user.component';
+import CompaniesList from './components/Companies/CompaniesList';
 
 function App() {
   return (
@@ -15,9 +15,9 @@ function App() {
         <Navbar />
         <br />
         <Route path="/" exact component={ProductionPlanList} />
-        <Route path="/edit/:id" component={EditExercise} />
-        <Route path="/create" component={CreateProductionPlan} />
+        <Route path="/companies" component={CompaniesList} />
         <Route path="/user" component={CreateUser} />
+        <Route path="/companies/edit/:id" component={EditCompany} />
       </div>
     </Router>
   );

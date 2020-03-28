@@ -8,14 +8,10 @@ router.route('/').get((req, res) => {
 });
 
 router.route('/add').post((req, res) => {
-  const id = req.body.id;
   const companyName = req.body.companyName;
-  const codes = req.body.codes;
 
   const newCompany = new Company({
-    id,
-    companyName,
-    codes
+    companyName
   });
 
   newCompany
@@ -30,7 +26,7 @@ router.route('/:id').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').delete((req, res) => {
+router.route('/delete/:id').delete((req, res) => {
   Company.findByIdAndDelete(req.params.id)
     .then(() => res.json('Company deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
