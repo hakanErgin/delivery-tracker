@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Navbar from './components/navbar.component';
 import ProductionPlanList from './components/ProductionPlans/production-plan-list.component';
 import EditCompany from './components/Companies/EditCompany';
+import EditProductionPlan from './components/ProductionPlans/EditProductionPlan';
 import CreateUser from './components/create-user.component';
 import CompaniesList from './components/Companies/CompaniesList';
 
@@ -18,6 +19,7 @@ function App() {
         <Route path="/companies" component={CompaniesList} />
         <Route path="/user" component={CreateUser} />
         <Route path="/companies/edit/:id" component={EditCompany} />
+        <Route path="/edit/:id" component={EditProductionPlan} />
       </div>
     </Router>
   );
