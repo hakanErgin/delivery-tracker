@@ -5,7 +5,8 @@
 - [ ] Create Delivery notes form 
 
       Fields: 
-        - Date 
+        - Date
+        - ID
           [ 
              - Code 
              - quantity 
