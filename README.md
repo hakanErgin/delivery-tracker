@@ -7,7 +7,7 @@
       Fields: 
         - Date
         - ID
-          [ 
+        - [ 
              - Code 
              - quantity 
              - production plan should be automatically selected and displayed. It should be the oldest production plan to have             quantity > 0 for the specified code 
