@@ -18,9 +18,11 @@
       Example:
       
           CODE | ORIGINAL QUANTITY | AVAILABLE QUANTITY |       DELIVERY NOTES              | 
-          001  |         100       |          70        |  DATE  | DELIVERY NOTE ID|QUANTITY|                                                                                         |30/03/20|       A123      |    10. |
+          001  |        100        |          70        |  DATE  | DELIVERY NOTE ID|QUANTITY|                                                                                         |30/03/20|       A123      |    10. |
                                                         |01/04/20|       B456      |    20  |
           ___________________________________________________________________________________
           002  |        50         |          20        |30/03/20|       A123      |    20  |
+ 
+ - [ ] more to come...
        
       
