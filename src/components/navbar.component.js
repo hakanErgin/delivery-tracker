@@ -22,7 +22,7 @@ export default class Navbar extends Component {
               </Link>
             </li>
             <li className="navbar-item">
-              <Link to="/user" className="nav-link">
+              <Link to="/deliverynotes" className="nav-link">
                 Delivery notes
               </Link>
             </li>
