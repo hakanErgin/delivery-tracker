@@ -1,24 +1,24 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import CreateProductionPlan from '../ProductionPlans/create-production-plan.component';
+import CreateDeliveryNote from './CreateDeliveryNotes';
 
-const ProductionPlan = props => (
+const DeliveryNote = props => (
   <>
     <tr>
-      <td>{props.productionPlan.productionPlanId}</td>
-      <td>{props.productionPlan.company}</td>
+      <td>{props.deliveryNote.deliveryNoteId}</td>
+      <td>{props.deliveryNote.company}</td>
 
-      <td>{props.productionPlan.code}</td>
-      <td>{props.productionPlan.quantity}</td>
+      <td>{props.deliveryNote.code}</td>
+      <td>{props.deliveryNote.quantity}</td>
 
-      <td>{props.productionPlan.date.substring(0, 10)}</td>
+      <td>{props.deliveryNote.date.substring(0, 10)}</td>
       <td>
-        <Link to={'/edit/' + props.productionPlan._id}>edit</Link> |{' '}
+        <Link to={'/edit/' + props.deliveryNote._id}>edit</Link> |{' '}
         <a
           href="#"
           onClick={() => {
-            props.deleteProductionPlan(props.productionPlan._id);
+            props.deleteDeliveryNote(props.deliveryNote._id);
           }}
         >
           delete
@@ -31,20 +31,20 @@ const ProductionPlan = props => (
   </>
 );
 
-export default class ProductionPlanList extends Component {
+export default class DeliveryNoteList extends Component {
   constructor(props) {
     super(props);
 
-    this.deleteProductionPlan = this.deleteProductionPlan.bind(this);
+    this.deleteDeliveryNote = this.deleteDeliveryNote.bind(this);
 
-    this.state = { productionPlans: [], showAddProductionPlan: false };
+    this.state = { deliveryNotes: [], showAddDeliveryNote: false };
   }
 
   componentDidMount() {
     axios
-      .get('http://localhost:5000/production-plan/')
+      .get('http://localhost:5000/delivery-note/')
       .then(response => {
-        this.setState({ productionPlans: response.data });
+        this.setState({ deliveryNotes: response.data });
         console.log('response', response);
       })
       .catch(error => {
@@ -52,7 +52,7 @@ export default class ProductionPlanList extends Component {
       });
   }
 
-  deleteProductionPlan(id) {
+  deleteDeliveryNote(id) {
     axios
       .delete('http://localhost:5000/production-plan/delete' + id)
       .then(response => {
@@ -60,45 +60,45 @@ export default class ProductionPlanList extends Component {
       });
 
     this.setState({
-      productionPlans: this.state.productionPlans.filter(el => el._id !== id)
+      deliveryNotes: this.state.deliveryNotes.filter(el => el._id !== id)
     });
   }
 
-  createProductionPlanList() {
-    return this.state.productionPlans.map(currentProductionPlan => {
+  createDeliveryNoteList() {
+    return this.state.deliveryNotes.map(currentDeliveryNote => {
       return (
-        <ProductionPlan
-          productionPlan={currentProductionPlan}
-          deleteProductionPlan={this.deleteProductionPlan}
-          key={currentProductionPlan._id}
+        <DeliveryNote
+          deliveryNote={currentDeliveryNote}
+          deleteDeliveryNote={this.deleteDeliveryNote}
+          key={currentDeliveryNote._id}
         />
       );
     });
   }
-  addProductionPlan() {
-    this.setState({ showAddProductionPlan: true });
+  addDeliveryNote() {
+    this.setState({ showAddDeliveryNote: true });
   }
 
   render() {
     return (
       <div>
-        <h3>List of Production Plans</h3>
+        <h3>List of Delivery Notes</h3>
         <table className="table">
           <thead className="thead-light">
             <tr>
-              <th>Production Plan Id</th>
+              <th>Delivery Note Id</th>
               <th>Company</th>
               <th>Code</th>
               <th>Quantity</th>
               <th>Date</th>
             </tr>
           </thead>
-          <tbody>{this.createProductionPlanList()}</tbody>
+          <tbody>{this.createDeliveryNoteList()}</tbody>
         </table>
-        <button onClick={() => this.setState({ showAddProductionPlan: true })}>
-          Add New Production Plan
+        <button onClick={() => this.setState({ showAddDeliveryNote: true })}>
+          Add New Delivery Note
         </button>
-        {this.state.showAddProductionPlan && <CreateProductionPlan />}
+        {this.state.showAddDeliveryNote && <CreateDeliveryNote />}
       </div>
     );
   }

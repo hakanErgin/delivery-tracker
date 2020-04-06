@@ -19,9 +19,11 @@ connection.once('open', () => {
 
 const companyRouter = require('./routes/companies');
 const productionPlanRouter = require('./routes/productionPlan');
+const deliveryNoteRouter = require('./routes/deliveryNote');
 
 app.use('/companies', companyRouter);
 app.use('/production-plan', productionPlanRouter);
+app.use('/delivery-note', deliveryNoteRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
