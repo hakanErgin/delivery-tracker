@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-expressions */
 import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import DeliveryBlock from './DeliveryBlock';
 
 export default class CreateDeliveryNote extends Component {
   constructor(props) {
@@ -10,17 +10,12 @@ export default class CreateDeliveryNote extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.onChangeCode = this.onChangeCode.bind(this);
-    this.onChangeQuantity = this.onChangeQuantity.bind(this);
-
     this.onSubmit = this.onSubmit.bind(this);
 
     this.state = {
       deliveryNoteId: '',
       date: new Date(),
       companies: [],
-      deliveries: [{ company: '', code: '', quantity: '', productionPlan: '' }],
     };
   }
 
@@ -36,18 +31,6 @@ export default class CreateDeliveryNote extends Component {
         console.log(error);
       });
     console.log('add- state:', this.state);
-
-    // axios
-    //   .get('http://localhost:5000/production-plan/')
-    //   .then((response) => {
-    //     const dateArray = response.data.filter((x) => x.quantity > 0 && x.date);
-    //     console.log('datearray with no 0 quantity', dateArray);
-    //     const prodPlan = dateArray.sort()[0];
-    //     console.log('production plan', prodPlan);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   }
 
   handleChange(event) {
@@ -57,26 +40,9 @@ export default class CreateDeliveryNote extends Component {
     console.log(this.state);
   }
 
-  handleSelectChange(event) {
-    const deliveries = { ...this.state.deliveries };
-    deliveries[0].company = event.target.value;
-    this.setState({ deliveries });
-    console.log(this.state);
-  }
-
   onChangeDate(date) {
     this.setState({
       date: date,
-    });
-  }
-  onChangeCode(event) {
-    this.setState({
-      code: event.target.value,
-    });
-  }
-  onChangeQuantity(event) {
-    this.setState({
-      quantity: event.target.value,
     });
   }
 
@@ -98,8 +64,6 @@ export default class CreateDeliveryNote extends Component {
       .then((res) => console.log(res.data))
       .then(() => (window.location = '/'));
   }
-
-  addFields() {}
 
   render() {
     return (
@@ -125,62 +89,7 @@ export default class CreateDeliveryNote extends Component {
               />
             </div>
           </div>
-          <div className="form-group">
-            <label>Company : </label>
-            <select
-              name="company"
-              ref="company"
-              required
-              className="form-control"
-              value={this.state.deliveries.company}
-              onChange={this.handleSelectChange}
-            >
-              <option value="placeholder" defaultValue>
-                Select a Company
-              </option>
-              {this.state.companies &&
-                this.state.companies.map(function (company) {
-                  return (
-                    <option
-                      key={company.companyName}
-                      value={company.companyName}
-                    >
-                      {company.companyName}
-                    </option>
-                  );
-                })}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Code: </label>
-            <input
-              type="text"
-              className="form-control"
-              value={this.state.code}
-              onChange={this.onChangeCode}
-            />
-          </div>
-          <div className="form-group">
-            <label>Quantity: </label>
-            <input
-              type="text"
-              className="form-control"
-              value={this.state.quantity}
-              onChange={this.onChangeQuantity}
-            />
-          </div>
-          <div className="form-group">
-            <label>Production plan: </label>
-            <input
-              type="text"
-              className="form-control"
-              value={this.state.quantity}
-            />
-          </div>
-
-          <button type="button" onClick={(e) => this.addFields(e)}>
-            add
-          </button>
+          <DeliveryBlock companies={this.state.companies} />
           <div className="form-group">
             <input
               type="submit"
