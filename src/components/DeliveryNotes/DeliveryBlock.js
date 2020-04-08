@@ -13,31 +13,26 @@ export default class DeliveryBlock extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log(this.state.deliveries);
-    console.log(typeof this.state.deliveries);
-  }
-
   handleSelectChange(index, event) {
-    const values = { ...this.state };
+    const values = { ...this.props };
     values.deliveries[index].company = event.target.value;
     this.setState(values);
   }
 
   onChangeCode(index, event) {
-    const values = { ...this.state };
+    const values = { ...this.props };
     values.deliveries[index].code = event.target.value;
     this.setState(values);
   }
 
   onChangeQuantity(index, event) {
-    const values = { ...this.state };
+    const values = { ...this.props };
     values.deliveries[index].quantity = event.target.value;
     this.setState(values);
   }
 
   addFields() {
-    const values = { ...this.state };
+    const values = { ...this.props };
     values.deliveries.push({
       company: '',
       code: '',
@@ -50,8 +45,8 @@ export default class DeliveryBlock extends Component {
   render() {
     return (
       <div>
-        {this.state.deliveries &&
-          this.state.deliveries.map((delivery, index) => (
+        {this.props.deliveries &&
+          this.props.deliveries.map((delivery, index) => (
             <React.Fragment key={`${delivery}~${index}`}>
               <div className="form-group">
                 <label>Company : </label>

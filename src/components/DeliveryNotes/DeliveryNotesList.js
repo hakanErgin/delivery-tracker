@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateDeliveryNote from './CreateDeliveryNotes';
 
-const DeliveryNote = props => (
+const DeliveryNote = (props) => (
   <>
     <tr>
       <td>{props.deliveryNote.deliveryNoteId}</td>
@@ -14,7 +14,7 @@ const DeliveryNote = props => (
 
       <td>{props.deliveryNote.date.substring(0, 10)}</td>
       <td>
-        <Link to={'/edit/' + props.deliveryNote._id}>edit</Link> |{' '}
+        <Link to={'/edit/' + props.deliveryNote._id}>edit</Link>
         <a
           href="#"
           onClick={() => {
@@ -43,11 +43,11 @@ export default class DeliveryNoteList extends Component {
   componentDidMount() {
     axios
       .get('http://localhost:5000/delivery-note/')
-      .then(response => {
+      .then((response) => {
         this.setState({ deliveryNotes: response.data });
         console.log('response', response);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
@@ -55,17 +55,17 @@ export default class DeliveryNoteList extends Component {
   deleteDeliveryNote(id) {
     axios
       .delete('http://localhost:5000/production-plan/delete' + id)
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
       });
 
     this.setState({
-      deliveryNotes: this.state.deliveryNotes.filter(el => el._id !== id)
+      deliveryNotes: this.state.deliveryNotes.filter((el) => el._id !== id),
     });
   }
 
   createDeliveryNoteList() {
-    return this.state.deliveryNotes.map(currentDeliveryNote => {
+    return this.state.deliveryNotes.map((currentDeliveryNote) => {
       return (
         <DeliveryNote
           deliveryNote={currentDeliveryNote}

@@ -16,6 +16,7 @@ export default class CreateDeliveryNote extends Component {
       deliveryNoteId: '',
       date: new Date(),
       companies: [],
+      deliveries: [{ company: '', code: '', quantity: '', productionPlan: '' }],
     };
   }
 
@@ -31,6 +32,12 @@ export default class CreateDeliveryNote extends Component {
         console.log(error);
       });
     console.log('add- state:', this.state);
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.deliveries !== prevState.deliveries) {
+      console.log('AAAA');
+    }
   }
 
   handleChange(event) {
@@ -51,10 +58,10 @@ export default class CreateDeliveryNote extends Component {
 
     const deliveryNote = {
       deliveryNoteId: this.state.deliveryNoteId,
-      company: this.state.company,
-      code: this.state.code,
-      quantity: this.state.quantity,
       date: this.state.date,
+      company: this.state.deliveries.company,
+      code: this.state.deliveries.code,
+      quantity: this.state.deliveries.quantity,
     };
 
     console.log(deliveryNote);
@@ -62,7 +69,7 @@ export default class CreateDeliveryNote extends Component {
     axios
       .post('http://localhost:5000/delivery-note/add', deliveryNote)
       .then((res) => console.log(res.data))
-      .then(() => (window.location = '/'));
+      .then(() => (window.location = '/deliverynotes'));
   }
 
   render() {
@@ -89,7 +96,10 @@ export default class CreateDeliveryNote extends Component {
               />
             </div>
           </div>
-          <DeliveryBlock companies={this.state.companies} />
+          <DeliveryBlock
+            companies={this.state.companies}
+            deliveries={this.state.deliveries}
+          />
           <div className="form-group">
             <input
               type="submit"
