@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import DeliveryBlock from './DeliveryBlock';
 
 export default class CreateDeliveryNote extends Component {
   constructor(props) {
@@ -11,12 +10,17 @@ export default class CreateDeliveryNote extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.handleCompanyChange = this.handleCompanyChange.bind(this);
+    this.onChangeQuantity = this.onChangeQuantity.bind(this);
+    this.onCodeChange = this.onCodeChange.bind(this);
 
     this.state = {
       deliveryNoteId: '',
       date: new Date(),
       companies: [],
       deliveries: [{ company: '', code: '', quantity: '', productionPlan: '' }],
+      productionPlans: [],
+      codes: '',
     };
   }
 
@@ -34,12 +38,6 @@ export default class CreateDeliveryNote extends Component {
     console.log('add- state:', this.state);
   }
 
-  componentDidUpdate(prevState) {
-    if (this.state.deliveries !== prevState.deliveries) {
-      console.log('AAAA');
-    }
-  }
-
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value,
@@ -51,6 +49,51 @@ export default class CreateDeliveryNote extends Component {
     this.setState({
       date: date,
     });
+  }
+
+  handleCompanyChange(index, event) {
+    const values = { ...this.state };
+    values.deliveries[index].company = event.target.value;
+    const chosenCompany = event.target.value;
+    this.setState(values);
+
+    axios
+      .get('http://localhost:5000/production-plan/')
+      .then((response) => {
+        this.setState({
+          productionPlans: response.data
+            .filter((prodPlan) => prodPlan.company === chosenCompany)
+            .sort(function (a, b) {
+              return new Date(a.date) - new Date(b.date);
+            }),
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  onCodeChange(index, event) {
+    const values = { ...this.state };
+    values.deliveries[index].code = event.target.value;
+    this.setState(values);
+  }
+
+  onChangeQuantity(index, event) {
+    const values = { ...this.state };
+    values.deliveries[index].quantity = event.target.value;
+    this.setState(values);
+  }
+
+  addFields() {
+    const values = { ...this.state };
+    values.deliveries.push({
+      company: '',
+      code: '',
+      quantity: '',
+      productionPlan: '',
+    });
+    this.setState(values);
   }
 
   onSubmit(e) {
@@ -96,10 +139,79 @@ export default class CreateDeliveryNote extends Component {
               />
             </div>
           </div>
-          <DeliveryBlock
-            companies={this.state.companies}
-            deliveries={this.state.deliveries}
-          />
+          <div>
+            {this.state.deliveries.map((delivery, index) => (
+              <React.Fragment key={`${delivery}~${index}`}>
+                <div className="form-group">
+                  <label>Company : </label>
+                  <select
+                    name="company"
+                    ref="company"
+                    required
+                    className="form-control"
+                    value={this.state.company}
+                    onChange={(event) => this.handleCompanyChange(index, event)}
+                  >
+                    <option value="placeholder" defaultValue>
+                      Select a Company
+                    </option>
+                    {this.state.companies &&
+                      this.state.companies.map(function (company) {
+                        return (
+                          <option
+                            key={company.companyName}
+                            value={company.companyName}
+                          >
+                            {company.companyName}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>code : </label>
+                  <select
+                    name="code"
+                    ref="code"
+                    required
+                    className="form-control"
+                    value={this.state.code}
+                    onChange={(event) => this.onCodeChange(index, event)}
+                  >
+                    <option value="placeholder" defaultValue>
+                      Select a code
+                    </option>
+                    {this.state.productionPlans &&
+                      this.state.productionPlans.map(function (prodPlan) {
+                        return (
+                          <option key={prodPlan.code} value={prodPlan.code}>
+                            {prodPlan.code}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Quantity: </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    className="form-control"
+                    value={delivery.quantity}
+                    onChange={(event) => this.onChangeQuantity(index, event)}
+                  />
+                </div>
+                <div>
+                  <label>production plan: </label>
+                  {/* {this.state.productionPlans[0].} */}
+                </div>
+                <button type="button" onClick={() => this.addFields()}>
+                  add
+                </button>
+              </React.Fragment>
+            ))}
+          </div>
           <div className="form-group">
             <input
               type="submit"
