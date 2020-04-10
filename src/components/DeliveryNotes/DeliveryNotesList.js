@@ -54,14 +54,14 @@ export default class DeliveryNoteList extends Component {
 
   deleteDeliveryNote(id) {
     axios
-      .delete('http://localhost:5000/production-plan/delete' + id)
+      .delete('http://localhost:5000/delivery-note/delete/' + id)
       .then((response) => {
         console.log(response.data);
       });
 
-    this.setState({
-      deliveryNotes: this.state.deliveryNotes.filter((el) => el._id !== id),
-    });
+    // this.setState({
+    //   deliveryNotes: this.state.deliveryNotes.filter((el) => el._id !== id),
+    // });
   }
 
   createDeliveryNoteList() {

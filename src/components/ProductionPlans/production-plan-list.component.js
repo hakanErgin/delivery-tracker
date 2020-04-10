@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateProductionPlan from './create-production-plan.component';
 
-const ProductionPlan = props => (
+const ProductionPlan = (props) => (
   <>
     <tr>
       <td>{props.productionPlan.productionPlanId}</td>
@@ -43,29 +43,29 @@ export default class ProductionPlanList extends Component {
   componentDidMount() {
     axios
       .get('http://localhost:5000/production-plan/')
-      .then(response => {
+      .then((response) => {
         this.setState({ productionPlans: response.data });
         console.log('response', response);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
 
   deleteProductionPlan(id) {
     axios
-      .delete('http://localhost:5000/production-plan/delete' + id)
-      .then(response => {
+      .delete('http://localhost:5000/production-plan/delete/' + id)
+      .then((response) => {
         console.log(response.data);
       });
 
     this.setState({
-      productionPlans: this.state.productionPlans.filter(el => el._id !== id)
+      productionPlans: this.state.productionPlans.filter((el) => el._id !== id),
     });
   }
 
   createProductionPlanList() {
-    return this.state.productionPlans.map(currentProductionPlan => {
+    return this.state.productionPlans.map((currentProductionPlan) => {
       return (
         <ProductionPlan
           productionPlan={currentProductionPlan}

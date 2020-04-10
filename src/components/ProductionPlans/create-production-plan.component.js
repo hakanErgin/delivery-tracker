@@ -20,19 +20,19 @@ export default class CreateProductionPlan extends Component {
       company: '',
       code: '',
       quantity: 0,
-      date: new Date()
+      date: new Date(),
     };
   }
 
   componentDidMount() {
     axios
       .get('http://localhost:5000/companies/')
-      .then(response => {
+      .then((response) => {
         console.log('response', response);
         this.setState({ companies: response.data });
         console.log('state', this.state);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
     console.log('component mounted. state:', this.state);
@@ -40,23 +40,23 @@ export default class CreateProductionPlan extends Component {
 
   handleChange(event) {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   }
 
   onChangeDate(date) {
     this.setState({
-      date: date
+      date: date,
     });
   }
   onChangeCode(event) {
     this.setState({
-      code: event.target.value
+      code: event.target.value,
     });
   }
   onChangeQuantity(event) {
     this.setState({
-      quantity: event.target.value
+      quantity: event.target.value,
     });
   }
 
@@ -68,14 +68,14 @@ export default class CreateProductionPlan extends Component {
       company: this.state.company,
       code: this.state.code,
       quantity: this.state.quantity,
-      date: this.state.date
+      date: this.state.date,
     };
 
     console.log(productionPlan);
 
     axios
       .post('http://localhost:5000/production-plan/add', productionPlan)
-      .then(res => console.log(res.data))
+      .then((res) => console.log(res.data))
       .then(() => (window.location = '/'));
   }
 
@@ -110,7 +110,7 @@ export default class CreateProductionPlan extends Component {
               </option>
 
               {this.state.companies &&
-                this.state.companies.map(function(company) {
+                this.state.companies.map(function (company) {
                   return (
                     <option
                       key={company.companyName}
@@ -126,6 +126,7 @@ export default class CreateProductionPlan extends Component {
             <label>Code: </label>
             <input
               type="text"
+              required
               className="form-control"
               value={this.state.code}
               onChange={this.onChangeCode}
@@ -135,6 +136,7 @@ export default class CreateProductionPlan extends Component {
             <label>Quantity: </label>
             <input
               type="text"
+              required
               className="form-control"
               value={this.state.quantity}
               onChange={this.onChangeQuantity}

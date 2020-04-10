@@ -23,14 +23,14 @@ export default class EditProductionPlan extends Component {
       company: '',
       code: '',
       quantity: '',
-      date: ''
+      date: '',
     };
   }
 
   componentDidMount() {
     axios
       .get('http://localhost:5000/production-plan/' + this.state.id)
-      .then(response => {
+      .then((response) => {
         console.log(response);
 
         this.setState({
@@ -38,53 +38,50 @@ export default class EditProductionPlan extends Component {
           code: response.data.code,
           quantity: response.data.quantity,
           company: response.data.company,
-          date: new Date(response.data.date)
+          date: new Date(response.data.date),
         });
         console.log('state', this.state);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
     axios
       .get('http://localhost:5000/companies/')
-      .then(response => {
+      .then((response) => {
         console.log('response', response);
         this.setState({ companies: response.data });
         console.log('state', this.state);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
     console.log('component mounted. state:', this.state);
   }
 
   onChangeId(event) {
-    console.log('event.target.value', event.target.value);
-
     this.setState({ productionPlanId: event.target.value });
-    console.log('productionPlanId', this.state.productionPlanId);
   }
 
   handleChange(event) {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   }
 
   onChangeDate(date) {
     this.setState({
-      date: date
+      date: date,
     });
   }
   onChangeCode(event) {
     this.setState({
-      code: event.target.value
+      code: event.target.value,
     });
   }
   onChangeQuantity(event) {
     this.setState({
-      quantity: event.target.value
+      quantity: event.target.value,
     });
   }
 
@@ -96,7 +93,7 @@ export default class EditProductionPlan extends Component {
       company: this.state.company,
       code: this.state.code,
       quantity: this.state.quantity,
-      date: this.state.date
+      date: this.state.date,
     };
 
     axios
@@ -104,7 +101,7 @@ export default class EditProductionPlan extends Component {
         'http://localhost:5000/production-plan/update/' + this.state.id,
         productionPlan
       )
-      .then(res => console.log(res.data))
+      .then((res) => console.log(res.data))
       .then(() => (window.location = '/'));
   }
 
@@ -134,7 +131,7 @@ export default class EditProductionPlan extends Component {
               onChange={this.handleChange}
             >
               {this.state.companies &&
-                this.state.companies.map(function(company) {
+                this.state.companies.map(function (company) {
                   return (
                     <option
                       key={company.companyName}

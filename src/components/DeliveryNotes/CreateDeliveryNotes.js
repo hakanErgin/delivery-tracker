@@ -1,3 +1,35 @@
+// axios
+//   .get('http://localhost:5000/production-plan/')
+//   .then((response) => {
+//     const values = { ...this.state };
+//     values.productionPlans.push(
+//       response.data
+//         .filter((prodPlan) => prodPlan.company === chosenCompany)
+//         .sort(function (a, b) {
+//           return new Date(a.date) - new Date(b.date);
+//         })
+//     );
+//     this.setState(values);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+// axios
+//   .get('http://localhost:5000/production-plan/')
+//   .then((response) => {
+//     this.setState({
+//       productionPlans: response.data
+//         .filter((prodPlan) => prodPlan.company === chosenCompany)
+//         .sort(function (a, b) {
+//           return new Date(a.date) - new Date(b.date);
+//         }),
+//     });
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
 import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
@@ -54,18 +86,16 @@ export default class CreateDeliveryNote extends Component {
   handleCompanyChange(index, event) {
     const values = { ...this.state };
     values.deliveries[index].company = event.target.value;
-    const chosenCompany = event.target.value;
+    // const chosenCompany = event.target.value;
     this.setState(values);
+
+    console.log(index);
 
     axios
       .get('http://localhost:5000/production-plan/')
       .then((response) => {
         this.setState({
-          productionPlans: response.data
-            .filter((prodPlan) => prodPlan.company === chosenCompany)
-            .sort(function (a, b) {
-              return new Date(a.date) - new Date(b.date);
-            }),
+          productionPlans: response.data.map((prodPlan) => prodPlan),
         });
       })
       .catch((error) => {
@@ -175,7 +205,7 @@ export default class CreateDeliveryNote extends Component {
                     ref="code"
                     required
                     className="form-control"
-                    value={this.state.code}
+                    value={this.state.deliveries[index].code}
                     onChange={(event) => this.onCodeChange(index, event)}
                   >
                     <option value="placeholder" defaultValue>
