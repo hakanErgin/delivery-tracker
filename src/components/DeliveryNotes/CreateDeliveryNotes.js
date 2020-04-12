@@ -67,7 +67,17 @@ export default class CreateDeliveryNote extends Component {
       .catch((error) => {
         console.log(error);
       });
-    console.log('add- state:', this.state);
+
+    axios
+      .get('http://localhost:5000/production-plan/')
+      .then((response) => {
+        this.setState({
+          productionPlans: response.data.map((prodPlan) => prodPlan),
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   handleChange(event) {
@@ -90,17 +100,6 @@ export default class CreateDeliveryNote extends Component {
     this.setState(values);
 
     console.log(index);
-
-    axios
-      .get('http://localhost:5000/production-plan/')
-      .then((response) => {
-        this.setState({
-          productionPlans: response.data.map((prodPlan) => prodPlan),
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
   }
 
   onCodeChange(index, event) {
@@ -212,12 +211,17 @@ export default class CreateDeliveryNote extends Component {
                       Select a code
                     </option>
                     {this.state.productionPlans &&
-                      this.state.productionPlans.map(function (prodPlan) {
-                        return (
-                          <option key={prodPlan.code} value={prodPlan.code}>
-                            {prodPlan.code}
-                          </option>
-                        );
+                      this.state.productionPlans.map((prodPlan) => {
+                        if (
+                          prodPlan.company ===
+                          this.state.deliveries[index].company
+                        )
+                          return (
+                            <option key={prodPlan.code} value={prodPlan.code}>
+                              {prodPlan.code}
+                            </option>
+                          );
+                        else return null;
                       })}
                   </select>
                 </div>
