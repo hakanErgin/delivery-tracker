@@ -7,6 +7,18 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/:company').get((req, res) => {
+  ProductionPlan.find()
+    .then(productionPlans =>
+      res.json(
+        productionPlans.filter(
+          productionPlan => productionPlan.company === req.params.company
+        )
+      )
+    )
+    .catch(err => res.status(400).json('Error: ' + err));
+});
+
 router.route('/:id').get((req, res) => {
   ProductionPlan.findById(req.params.id)
     .then(productionPlan => res.json(productionPlan))
@@ -18,13 +30,15 @@ router.route('/add').post((req, res) => {
   const company = req.body.company;
 
   const code = req.body.code;
-  const quantity = req.body.quantity;
+  const originalQuantity = req.body.originalQuantity;
+  const quantityLeft = req.body.quantityLeft;
   const date = req.body.date;
   const newProductionPlan = new ProductionPlan({
     productionPlanId,
     company,
     code,
-    quantity,
+    originalQuantity,
+    quantityLeft,
     date
   });
 
@@ -46,7 +60,8 @@ router.route('/update/:id').post((req, res) => {
       productionPlan.id = req.body.id;
       productionPlan.company = req.body.company;
       productionPlan.code = req.body.code;
-      productionPlan.quantity = req.body.quantity;
+      productionPlan.originalQuantity = req.body.originalQuantity;
+      productionPlan.quantityLeft = req.body.quantityLeft;
       productionPlan.date = req.body.date;
 
       productionPlan

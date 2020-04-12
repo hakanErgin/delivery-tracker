@@ -52,19 +52,20 @@ export default class CreateDeliveryNote extends Component {
       companies: [],
       deliveries: [{ company: '', code: '', quantity: '', productionPlan: '' }],
       productionPlans: [],
-      codes: '',
+      chosenCompanyProductionPlans: [],
+      codes: []
     };
   }
 
   componentDidMount() {
     axios
       .get('http://localhost:5000/companies/')
-      .then((response) => {
+      .then(response => {
         console.log('response', response);
         this.setState({ companies: response.data });
         console.log('state', this.state);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
     console.log('add- state:', this.state);
@@ -72,33 +73,46 @@ export default class CreateDeliveryNote extends Component {
 
   handleChange(event) {
     this.setState({
-      [event.target.name]: event.target.value,
+      [event.target.name]: event.target.value
     });
     console.log(this.state);
   }
 
   onChangeDate(date) {
     this.setState({
-      date: date,
+      date: date
     });
   }
 
   handleCompanyChange(index, event) {
     const values = { ...this.state };
-    values.deliveries[index].company = event.target.value;
-    // const chosenCompany = event.target.value;
+    const selectedCompany = event.target.value;
+    values.deliveries[index].company = selectedCompany;
+
     this.setState(values);
 
-    console.log(index);
-
     axios
-      .get('http://localhost:5000/production-plan/')
-      .then((response) => {
-        this.setState({
-          productionPlans: response.data.map((prodPlan) => prodPlan),
-        });
+      .get(`http://localhost:5000/production-plan/${selectedCompany}`)
+      .then(response => {
+        let selectedProductionPlan = [];
+        response.data.map(prodPlan => selectedProductionPlan.push(prodPlan));
+
+        const currentProdPlan = this.state.chosenCompanyProductionPlans[index];
+        // if we already have a production plan for the current index (meaning that a company has already been selected) we want to replace it instead of adding it to the array
+        if (currentProdPlan) {
+          const values = { ...this.state };
+          values.chosenCompanyProductionPlans[index] = selectedProductionPlan;
+          this.setState(values);
+        } else {
+          this.setState({
+            chosenCompanyProductionPlans: [
+              ...this.state.chosenCompanyProductionPlans,
+              selectedProductionPlan
+            ]
+          });
+        }
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
@@ -106,6 +120,7 @@ export default class CreateDeliveryNote extends Component {
   onCodeChange(index, event) {
     const values = { ...this.state };
     values.deliveries[index].code = event.target.value;
+    values.codes[index] = event.target.value;
     this.setState(values);
   }
 
@@ -121,7 +136,7 @@ export default class CreateDeliveryNote extends Component {
       company: '',
       code: '',
       quantity: '',
-      productionPlan: '',
+      productionPlan: ''
     });
     this.setState(values);
   }
@@ -134,15 +149,28 @@ export default class CreateDeliveryNote extends Component {
       date: this.state.date,
       company: this.state.deliveries.company,
       code: this.state.deliveries.code,
-      quantity: this.state.deliveries.quantity,
+      quantity: this.state.deliveries.quantity
     };
 
     console.log(deliveryNote);
 
     axios
       .post('http://localhost:5000/delivery-note/add', deliveryNote)
-      .then((res) => console.log(res.data))
+      .then(res => console.log(res.data))
       .then(() => (window.location = '/deliverynotes'));
+  }
+
+  getSelectedProductionPlan(index) {
+    return this.state.chosenCompanyProductionPlans[index].filter(
+      productionPlan => productionPlan.code === this.state.codes[index]
+    );
+  }
+
+  getQuantityLeft(index) {
+    const selectedProductionPlan = this.getSelectedProductionPlan(index);
+    console.log('selectedProductionPlan', selectedProductionPlan);
+
+    return selectedProductionPlan[0] && selectedProductionPlan[0].quantityLeft;
   }
 
   render() {
@@ -180,13 +208,13 @@ export default class CreateDeliveryNote extends Component {
                     required
                     className="form-control"
                     value={this.state.company}
-                    onChange={(event) => this.handleCompanyChange(index, event)}
+                    onChange={event => this.handleCompanyChange(index, event)}
                   >
                     <option value="placeholder" defaultValue>
                       Select a Company
                     </option>
                     {this.state.companies &&
-                      this.state.companies.map(function (company) {
+                      this.state.companies.map(function(company) {
                         return (
                           <option
                             key={company.companyName}
@@ -206,36 +234,53 @@ export default class CreateDeliveryNote extends Component {
                     required
                     className="form-control"
                     value={this.state.deliveries[index].code}
-                    onChange={(event) => this.onCodeChange(index, event)}
+                    onChange={event => this.onCodeChange(index, event)}
                   >
                     <option value="placeholder" defaultValue>
                       Select a code
                     </option>
-                    {this.state.productionPlans &&
-                      this.state.productionPlans.map(function (prodPlan) {
-                        return (
-                          <option key={prodPlan.code} value={prodPlan.code}>
-                            {prodPlan.code}
+                    {this.state.chosenCompanyProductionPlans[index] &&
+                      this.state.chosenCompanyProductionPlans[index].map(
+                        chosenCompanyProductionPlan => (
+                          <option
+                            key={chosenCompanyProductionPlan.code}
+                            value={chosenCompanyProductionPlan.code}
+                          >
+                            {chosenCompanyProductionPlan.code}
                           </option>
-                        );
-                      })}
+                        )
+                      )}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label>Quantity: </label>
+                  <label>
+                    Quantity
+                    {this.state.codes[index] != null &&
+                      `
+                    max: ${this.getQuantityLeft(index)}`}
+                    :
+                  </label>
                   <input
                     type="number"
                     min="1"
-                    max="100"
+                    max={
+                      this.state.code && this.getQuantityLeft(this.state.code)
+                    }
                     className="form-control"
                     value={delivery.quantity}
-                    onChange={(event) => this.onChangeQuantity(index, event)}
+                    onChange={event => this.onChangeQuantity(index, event)}
                   />
                 </div>
-                <div>
-                  <label>production plan: </label>
-                  {/* {this.state.productionPlans[0].} */}
-                </div>
+                {this.state.chosenCompanyProductionPlans[index] && (
+                  <div>
+                    <label>production plan </label>
+                    {`No: ${this.getSelectedProductionPlan(index).map(
+                      pp => pp.productionPlanId
+                    )} date : ${this.getSelectedProductionPlan(index).map(
+                      pp => pp.date
+                    )}`}
+                  </div>
+                )}
                 <button type="button" onClick={() => this.addFields()}>
                   add
                 </button>
