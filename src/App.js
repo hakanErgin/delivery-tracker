@@ -7,6 +7,8 @@ import ProductionPlanList from './components/ProductionPlans/production-plan-lis
 import EditCompany from './components/Companies/EditCompany';
 import EditProductionPlan from './components/ProductionPlans/EditProductionPlan';
 import DeliveryNotesList from './components/DeliveryNotes/DeliveryNotesList';
+import EditDeliveryNotes from './components/DeliveryNotes/EditDeliveryNotes';
+
 import CompaniesList from './components/Companies/CompaniesList';
 
 function App() {
@@ -18,6 +20,7 @@ function App() {
         <Route path="/" exact component={ProductionPlanList} />
         <Route path="/companies" component={CompaniesList} />
         <Route path="/deliverynotes" component={DeliveryNotesList} />
+        <Route path="/deliverynotes/edit/:id" component={EditDeliveryNotes} />
         <Route path="/companies/edit/:id" component={EditCompany} />
         <Route path="/edit/:id" component={EditProductionPlan} />
       </div>

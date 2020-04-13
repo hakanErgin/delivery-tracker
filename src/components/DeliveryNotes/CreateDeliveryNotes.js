@@ -127,6 +127,9 @@ export default class CreateDeliveryNote extends Component {
   onChangeQuantity(index, event) {
     const values = { ...this.state };
     values.deliveries[index].quantity = event.target.value;
+    values.deliveries[index].productionPlan = this.getSelectedProductionPlan(
+      index
+    )[0].productionPlanId;
     this.setState(values);
   }
 
@@ -147,9 +150,7 @@ export default class CreateDeliveryNote extends Component {
     const deliveryNote = {
       deliveryNoteId: this.state.deliveryNoteId,
       date: this.state.date,
-      company: this.state.deliveries.company,
-      code: this.state.deliveries.code,
-      quantity: this.state.deliveries.quantity
+      delivery: [...this.state.deliveries]
     };
 
     console.log(deliveryNote);
@@ -271,14 +272,10 @@ export default class CreateDeliveryNote extends Component {
                     onChange={event => this.onChangeQuantity(index, event)}
                   />
                 </div>
-                {this.state.chosenCompanyProductionPlans[index] && (
+                {this.state.deliveries[index].productionPlan && (
                   <div>
                     <label>production plan </label>
-                    {`No: ${this.getSelectedProductionPlan(index).map(
-                      pp => pp.productionPlanId
-                    )} date : ${this.getSelectedProductionPlan(index).map(
-                      pp => pp.date
-                    )}`}
+                    {this.state.deliveries[index].productionPlan}
                   </div>
                 )}
                 <button type="button" onClick={() => this.addFields()}>

@@ -3,31 +3,18 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateDeliveryNote from './CreateDeliveryNotes';
 
-const DeliveryNote = (props) => (
+const DeliveryNote = props => (
   <>
-    <tr>
-      <td>{props.deliveryNote.deliveryNoteId}</td>
-      <td>{props.deliveryNote.company}</td>
-
-      <td>{props.deliveryNote.code}</td>
-      <td>{props.deliveryNote.quantity}</td>
-
-      <td>{props.deliveryNote.date.substring(0, 10)}</td>
-      <td>
-        <Link to={'/edit/' + props.deliveryNote._id}>edit</Link>
-        <a
-          href="#"
-          onClick={() => {
-            props.deleteDeliveryNote(props.deliveryNote._id);
-          }}
-        >
-          delete
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td>deliveries</td>
-    </tr>
+    {props.deliveryNote.map(delivery => {
+      return (
+        <tr>
+          <td>{delivery.company}</td>
+          <td>{delivery.code}</td>
+          <td>{delivery.quantity}</td>
+          <td>{delivery.productionPlan}</td>
+        </tr>
+      );
+    })}
   </>
 );
 
@@ -43,11 +30,11 @@ export default class DeliveryNoteList extends Component {
   componentDidMount() {
     axios
       .get('http://localhost:5000/delivery-note/')
-      .then((response) => {
+      .then(response => {
         this.setState({ deliveryNotes: response.data });
         console.log('response', response);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   }
@@ -55,23 +42,39 @@ export default class DeliveryNoteList extends Component {
   deleteDeliveryNote(id) {
     axios
       .delete('http://localhost:5000/delivery-note/delete/' + id)
-      .then((response) => {
+      .then(response => {
         console.log(response.data);
       });
 
-    // this.setState({
-    //   deliveryNotes: this.state.deliveryNotes.filter((el) => el._id !== id),
-    // });
+    this.setState({
+      deliveryNotes: this.state.deliveryNotes.filter(el => el._id !== id)
+    });
   }
 
   createDeliveryNoteList() {
-    return this.state.deliveryNotes.map((currentDeliveryNote) => {
+    return this.state.deliveryNotes.map(currentDeliveryNote => {
       return (
-        <DeliveryNote
-          deliveryNote={currentDeliveryNote}
-          deleteDeliveryNote={this.deleteDeliveryNote}
-          key={currentDeliveryNote._id}
-        />
+        <tr style={{ border: '1px black solid' }}>
+          <td>{currentDeliveryNote.deliveryNoteId}</td>
+          <td>{currentDeliveryNote.date.substring(0, 10)}</td>
+          <DeliveryNote
+            deliveryNote={currentDeliveryNote.delivery}
+            deleteDeliveryNote={this.deleteDeliveryNote}
+            key={currentDeliveryNote._id}
+          />
+          <td>
+            <Link to={'delivery-note/edit/' + currentDeliveryNote._id}>
+              edit
+            </Link>
+            <button
+              onClick={() => {
+                this.deleteDeliveryNote(currentDeliveryNote._id);
+              }}
+            >
+              delete
+            </button>
+          </td>
+        </tr>
       );
     });
   }
@@ -87,10 +90,11 @@ export default class DeliveryNoteList extends Component {
           <thead className="thead-light">
             <tr>
               <th>Delivery Note Id</th>
+              <th>Date</th>
               <th>Company</th>
               <th>Code</th>
               <th>Quantity</th>
-              <th>Date</th>
+              <th>Production Plan</th>
             </tr>
           </thead>
           <tbody>{this.createDeliveryNoteList()}</tbody>
