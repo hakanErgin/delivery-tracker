@@ -20,7 +20,6 @@ const Company = (props) => (
         </button>
       </td>
     </tr>
-    <hr />
   </>
 );
 
