@@ -13,6 +13,7 @@
              - production plan should be automatically selected and displayed. It should be the oldest production plan to have quantity > 0 for the specified code
           ]
 
+
 - [ ] Creating a new delivery note should decrease the quantities in the production plan
 
       The production plan should have two different columns: 'original quantity' and 'available quantity'
