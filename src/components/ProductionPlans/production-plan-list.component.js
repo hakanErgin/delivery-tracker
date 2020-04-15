@@ -3,26 +3,25 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateProductionPlan from './create-production-plan.component';
 
-const ProductionPlan = props => (
+const ProductionPlan = (props) => (
   <>
     <tr>
       <td>{props.productionPlan.productionPlanId}</td>
       <td>{props.productionPlan.company}</td>
 
       <td>{props.productionPlan.code}</td>
-      <td>{props.productionPlan.quantity}</td>
-
+      <td>{props.productionPlan.originalQuantity}</td>
+      <td>{props.productionPlan.quantityLeft}</td>
       <td>{props.productionPlan.date.substring(0, 10)}</td>
       <td>
         <Link to={'/edit/' + props.productionPlan._id}>edit</Link> |{' '}
-        <a
-          href="#"
+        <button
           onClick={() => {
             props.deleteProductionPlan(props.productionPlan._id);
           }}
         >
           delete
-        </a>
+        </button>
       </td>
     </tr>
     <tr>
@@ -43,29 +42,28 @@ export default class ProductionPlanList extends Component {
   componentDidMount() {
     axios
       .get('http://localhost:5000/production-plan/')
-      .then(response => {
+      .then((response) => {
         this.setState({ productionPlans: response.data });
-        console.log('response', response);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
 
   deleteProductionPlan(id) {
     axios
-      .delete('http://localhost:5000/production-plan/delete' + id)
-      .then(response => {
+      .delete('http://localhost:5000/production-plan/delete/' + id)
+      .then((response) => {
         console.log(response.data);
       });
 
     this.setState({
-      productionPlans: this.state.productionPlans.filter(el => el._id !== id)
+      productionPlans: this.state.productionPlans.filter((el) => el._id !== id),
     });
   }
 
   createProductionPlanList() {
-    return this.state.productionPlans.map(currentProductionPlan => {
+    return this.state.productionPlans.map((currentProductionPlan) => {
       return (
         <ProductionPlan
           productionPlan={currentProductionPlan}
@@ -89,7 +87,8 @@ export default class ProductionPlanList extends Component {
               <th>Production Plan Id</th>
               <th>Company</th>
               <th>Code</th>
-              <th>Quantity</th>
+              <th>Original Quantity</th>
+              <th>Quantity Left</th>
               <th>Date</th>
             </tr>
           </thead>

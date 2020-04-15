@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import DatePicker from 'react-datepicker';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 export default class EditCompany extends Component {
   constructor(props) {
@@ -13,7 +10,7 @@ export default class EditCompany extends Component {
 
     this.state = {
       id: props.match.params.id,
-      companyName: ''
+      companyName: '',
     };
   }
 
@@ -22,19 +19,19 @@ export default class EditCompany extends Component {
 
     axios
       .get('http://localhost:5000/companies/' + this.state.id)
-      .then(response => {
+      .then((response) => {
         this.setState({
-          companyName: response.data.companyName
+          companyName: response.data.companyName,
         });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
 
   onChange(e) {
     this.setState({
-      companyName: e.target.value
+      companyName: e.target.value,
     });
   }
 
@@ -46,7 +43,7 @@ export default class EditCompany extends Component {
 
     axios
       .post('http://localhost:5000/companies/update/' + this.state.id, company)
-      .then(res => console.log(res.data))
+      .then((res) => console.log(res.data))
       .then(() => (window.location = '/companies'));
   }
 

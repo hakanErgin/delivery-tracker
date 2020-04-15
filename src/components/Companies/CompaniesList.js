@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateCompany from './CreateCompany';
 
-const Company = props => (
+const Company = (props) => (
   <>
     <tr>
       <td>{props.company.id}</td>
@@ -11,17 +11,15 @@ const Company = props => (
 
       <td>
         <Link to={'/companies/edit/' + props.company._id}>edit</Link> |{' '}
-        <a
-          href="#"
+        <button
           onClick={() => {
             props.deleteCompany(props.company._id);
           }}
         >
           delete
-        </a>
+        </button>
       </td>
     </tr>
-    <hr />
   </>
 );
 
@@ -37,10 +35,10 @@ export default class ProductionPlanList extends Component {
   componentDidMount() {
     axios
       .get('http://localhost:5000/companies/')
-      .then(response => {
+      .then((response) => {
         this.setState({ companies: response.data });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
@@ -48,17 +46,17 @@ export default class ProductionPlanList extends Component {
   deleteCompany(id) {
     axios
       .delete('http://localhost:5000/companies/delete/' + id)
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
       });
 
     this.setState({
-      companies: this.state.companies.filter(el => el._id !== id)
+      companies: this.state.companies.filter((el) => el._id !== id),
     });
   }
 
   createCompaniesList() {
-    return this.state.companies.map(company => {
+    return this.state.companies.map((company) => {
       return (
         <Company
           company={company}

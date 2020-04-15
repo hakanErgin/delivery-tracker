@@ -6,7 +6,9 @@ import Navbar from './components/navbar.component';
 import ProductionPlanList from './components/ProductionPlans/production-plan-list.component';
 import EditCompany from './components/Companies/EditCompany';
 import EditProductionPlan from './components/ProductionPlans/EditProductionPlan';
-import CreateUser from './components/create-user.component';
+import DeliveryNotesList from './components/DeliveryNotes/DeliveryNotesList';
+import EditDeliveryNotes from './components/DeliveryNotes/EditDeliveryNotes';
+
 import CompaniesList from './components/Companies/CompaniesList';
 
 function App() {
@@ -17,7 +19,8 @@ function App() {
         <br />
         <Route path="/" exact component={ProductionPlanList} />
         <Route path="/companies" component={CompaniesList} />
-        <Route path="/user" component={CreateUser} />
+        <Route path="/deliverynotes" component={DeliveryNotesList} />
+        <Route path="/deliverynotes/edit/:id" component={EditDeliveryNotes} />
         <Route path="/companies/edit/:id" component={EditCompany} />
         <Route path="/edit/:id" component={EditProductionPlan} />
       </div>

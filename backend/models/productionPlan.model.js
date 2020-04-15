@@ -9,7 +9,8 @@ const ProductionPlanSchema = new Schema({
     required: true
   },
   code: String,
-  quantity: Number,
+  originalQuantity: Number,
+  quantityLeft: Number,
   date: Date
 });
 
