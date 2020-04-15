@@ -21,19 +21,19 @@ export default class CreateProductionPlan extends Component {
       code: '',
       originalQuantity: 0,
       quantityLeft: 0,
-      date: new Date()
+      date: new Date(),
     };
   }
 
   componentDidMount() {
     axios
       .get('http://localhost:5000/companies/')
-      .then(response => {
+      .then((response) => {
         console.log('response', response);
         this.setState({ companies: response.data });
         console.log('state', this.state);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
     console.log('component mounted. state:', this.state);
@@ -41,23 +41,23 @@ export default class CreateProductionPlan extends Component {
 
   handleChange(event) {
     this.setState({
-      [event.target.name]: event.target.value
+      [event.target.name]: event.target.value,
     });
   }
 
   onChangeDate(date) {
     this.setState({
-      date: date
+      date: date,
     });
   }
   onChangeCode(event) {
     this.setState({
-      code: event.target.value
+      code: event.target.value,
     });
   }
   onChangeQuantity(event) {
     this.setState({
-      originalQuantity: event.target.value
+      originalQuantity: event.target.value,
     });
   }
 
@@ -70,14 +70,14 @@ export default class CreateProductionPlan extends Component {
       code: this.state.code,
       originalQuantity: this.state.originalQuantity,
       quantityLeft: this.state.originalQuantity,
-      date: this.state.date
+      date: this.state.date,
     };
 
     console.log(productionPlan);
 
     axios
       .post('http://localhost:5000/production-plan/add', productionPlan)
-      .then(res => console.log(res.data))
+      .then((res) => console.log(res.data))
       .then(() => (window.location = '/'));
   }
 
@@ -107,12 +107,10 @@ export default class CreateProductionPlan extends Component {
               value={this.state.company}
               onChange={this.handleChange}
             >
-              <option value="placeholder" selected>
-                Select a Company
-              </option>
+              <option value="placeholder">Select a Company</option>
 
               {this.state.companies &&
-                this.state.companies.map(function(company) {
+                this.state.companies.map(function (company) {
                   return (
                     <option
                       key={company.companyName}

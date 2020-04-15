@@ -3,26 +3,26 @@ let ProductionPlan = require('../models/productionPlan.model');
 
 router.route('/').get((req, res) => {
   ProductionPlan.find()
-    .then(productionPlan => res.json(productionPlan))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .then((productionPlan) => res.json(productionPlan))
+    .catch((err) => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:company').get((req, res) => {
+router.route('/company/:companyId').get((req, res) => {
   ProductionPlan.find()
-    .then(productionPlans =>
+    .then((productionPlans) =>
       res.json(
         productionPlans.filter(
-          productionPlan => productionPlan.company === req.params.company
+          (productionPlan) => productionPlan.company === req.params.company
         )
       )
     )
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json('Error: ' + err));
 });
 
 router.route('/:id').get((req, res) => {
   ProductionPlan.findById(req.params.id)
-    .then(productionPlan => res.json(productionPlan))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .then((productionPlan) => res.json(productionPlan))
+    .catch((err) => res.status(400).json('Error: ' + err));
 });
 
 router.route('/add').post((req, res) => {
@@ -39,24 +39,24 @@ router.route('/add').post((req, res) => {
     code,
     originalQuantity,
     quantityLeft,
-    date
+    date,
   });
 
   newProductionPlan
     .save()
     .then(() => res.json('Production Plan added!'))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json('Error: ' + err));
 });
 
 router.route('/delete/:id').delete((req, res) => {
   ProductionPlan.findByIdAndDelete(req.params.id)
     .then(() => res.json('Production Plan deleted.'))
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json('Error: ' + err));
 });
 
 router.route('/update/:id').post((req, res) => {
   ProductionPlan.findById(req.params.id)
-    .then(productionPlan => {
+    .then((productionPlan) => {
       productionPlan.id = req.body.id;
       productionPlan.company = req.body.company;
       productionPlan.code = req.body.code;
@@ -67,9 +67,9 @@ router.route('/update/:id').post((req, res) => {
       productionPlan
         .save()
         .then(() => res.json('Production Plan updated!'))
-        .catch(err => res.status(400).json('Error: ' + err));
+        .catch((err) => res.status(400).json('Error: ' + err));
     })
-    .catch(err => res.status(400).json('Error: ' + err));
+    .catch((err) => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;

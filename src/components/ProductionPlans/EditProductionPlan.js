@@ -29,14 +29,14 @@ export default class EditProductionPlan extends Component {
 
   componentDidMount() {
     axios
-      .get('http://localhost:5000/production-plan/' + this.state.id)
+      .get(`http://localhost:5000/production-plan/${this.state.id}`)
       .then((response) => {
         console.log(response);
 
         this.setState({
           productionPlanId: response.data.productionPlanId,
           code: response.data.code,
-          quantity: response.data.quantity,
+          quantity: response.data.originalQuantity,
           company: response.data.company,
           date: new Date(response.data.date),
         });
@@ -49,9 +49,7 @@ export default class EditProductionPlan extends Component {
     axios
       .get('http://localhost:5000/companies/')
       .then((response) => {
-        console.log('response', response);
         this.setState({ companies: response.data });
-        console.log('state', this.state);
       })
       .catch((error) => {
         console.log(error);
