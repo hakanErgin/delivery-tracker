@@ -3,17 +3,30 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateDeliveryNote from './CreateDeliveryNotes';
 
-const DeliveryNote = props => (
+const DeliveryNote = (props) => (
   <>
-    {props.deliveryNote.map(delivery => {
-      return (
-        <tr>
-          <td>{delivery.company}</td>
-          <td>{delivery.code}</td>
-          <td>{delivery.quantity}</td>
-          <td>{delivery.productionPlan}</td>
-        </tr>
-      );
+    {props.deliveryNote.map((delivery, index) => {
+      console.log(delivery, index);
+      if (index === 0)
+        return (
+          <>
+            {/* <tr> */}
+            <td>{delivery.company}</td>
+            <td>{delivery.code}</td>
+            <td>{delivery.quantity}</td>
+            <td>{delivery.productionPlan}</td>
+            {/* </tr> */}
+          </>
+        );
+      else
+        return (
+          <tr>
+            <td>{delivery.company}</td>
+            <td>{delivery.code}</td>
+            <td>{delivery.quantity}</td>
+            <td>{delivery.productionPlan}</td>
+          </tr>
+        );
     })}
   </>
 );
@@ -21,20 +34,18 @@ const DeliveryNote = props => (
 export default class DeliveryNoteList extends Component {
   constructor(props) {
     super(props);
-
     this.deleteDeliveryNote = this.deleteDeliveryNote.bind(this);
-
     this.state = { deliveryNotes: [], showAddDeliveryNote: false };
   }
 
   componentDidMount() {
     axios
       .get('http://localhost:5000/delivery-note/')
-      .then(response => {
+      .then((response) => {
         this.setState({ deliveryNotes: response.data });
-        console.log('response', response);
+        // console.log('response', response);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
       });
   }
@@ -42,19 +53,19 @@ export default class DeliveryNoteList extends Component {
   deleteDeliveryNote(id) {
     axios
       .delete('http://localhost:5000/delivery-note/delete/' + id)
-      .then(response => {
+      .then((response) => {
         console.log(response.data);
       });
 
     this.setState({
-      deliveryNotes: this.state.deliveryNotes.filter(el => el._id !== id)
+      deliveryNotes: this.state.deliveryNotes.filter((el) => el._id !== id),
     });
   }
 
   createDeliveryNoteList() {
-    return this.state.deliveryNotes.map(currentDeliveryNote => {
+    return this.state.deliveryNotes.map((currentDeliveryNote, index) => {
       return (
-        <tr style={{ border: '1px black solid' }}>
+        <tr key={index} style={{ border: '1px black solid' }}>
           <td>{currentDeliveryNote.deliveryNoteId}</td>
           <td>{currentDeliveryNote.date.substring(0, 10)}</td>
           <DeliveryNote

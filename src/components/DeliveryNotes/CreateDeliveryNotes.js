@@ -94,6 +94,8 @@ export default class CreateDeliveryNote extends Component {
     axios
       .get(`http://localhost:5000/production-plan/company/${selectedCompany}`)
       .then((response) => {
+        console.log(response);
+
         let selectedProductionPlan = [];
         response.data.map((prodPlan) => selectedProductionPlan.push(prodPlan));
 
