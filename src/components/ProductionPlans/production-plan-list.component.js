@@ -8,7 +8,6 @@ const ProductionPlan = (props) => (
     <tr>
       <td>{props.productionPlan.productionPlanId}</td>
       <td>{props.productionPlan.company}</td>
-
       <td>{props.productionPlan.code}</td>
       <td>{props.productionPlan.originalQuantity}</td>
       <td>{props.productionPlan.quantityLeft}</td>

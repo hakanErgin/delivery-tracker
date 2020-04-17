@@ -7,7 +7,7 @@ router.route('/').get((req, res) => {
     .catch((err) => res.status(400).json('Error: ' + err));
 });
 
-router.route('/company/:companyId').get((req, res) => {
+router.route('/company/:company').get((req, res) => {
   ProductionPlan.find()
     .then((productionPlans) =>
       res.json(

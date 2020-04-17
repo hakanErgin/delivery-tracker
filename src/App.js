@@ -20,7 +20,7 @@ function App() {
         <Route path="/" exact component={ProductionPlanList} />
         <Route path="/companies" component={CompaniesList} />
         <Route path="/deliverynotes" component={DeliveryNotesList} />
-        <Route path="/deliverynotes/edit/:id" component={EditDeliveryNotes} />
+        <Route path="/delivery-note/edit/:id" component={EditDeliveryNotes} />
         <Route path="/companies/edit/:id" component={EditCompany} />
         <Route path="/edit/:id" component={EditProductionPlan} />
       </div>
