@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import CreateProductionPlan from './create-production-plan.component';
+import CreateProductionPlan from './CreateProductionPlan';
 
 const ProductionPlan = (props) => (
   <>
     <tr>
       <td>{props.productionPlan.productionPlanId}</td>
-      <td>{props.productionPlan.company}</td>
+      <td>{props.productionPlan.company.companyName}</td>
       <td>{props.productionPlan.code}</td>
       <td>{props.productionPlan.originalQuantity}</td>
       <td>{props.productionPlan.quantityLeft}</td>

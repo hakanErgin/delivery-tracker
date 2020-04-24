@@ -3,7 +3,7 @@ let ProductionPlan = require('../models/productionPlan.model');
 
 router.route('/').get((req, res) => {
   ProductionPlan.find()
-    // .populate('Company')
+    .populate('company')
     .then((productionPlan) => res.json(productionPlan))
     .catch((err) => res.status(400).json('Error: ' + err));
 });
