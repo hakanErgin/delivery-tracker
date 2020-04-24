@@ -3,6 +3,7 @@ let ProductionPlan = require('../models/productionPlan.model');
 
 router.route('/').get((req, res) => {
   ProductionPlan.find()
+    // .populate('Company')
     .then((productionPlan) => res.json(productionPlan))
     .catch((err) => res.status(400).json('Error: ' + err));
 });
@@ -26,9 +27,8 @@ router.route('/:id').get((req, res) => {
 });
 
 router.route('/add').post((req, res) => {
-  const productionPlanId = req.body.productionPlanId;
   const company = req.body.company;
-
+  const productionPlanId = req.body.productionPlanId;
   const code = req.body.code;
   const originalQuantity = req.body.originalQuantity;
   const quantityLeft = req.body.quantityLeft;

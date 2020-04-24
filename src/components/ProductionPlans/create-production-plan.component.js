@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 export default class CreateProductionPlan extends Component {
   constructor(props) {
     super(props);
+    this.handleCompanyChange = this.handleCompanyChange.bind(this);
 
     this.handleChange = this.handleChange.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
@@ -17,7 +18,7 @@ export default class CreateProductionPlan extends Component {
     this.state = {
       productionPlanId: '',
       companies: [],
-      company: '',
+      company: {},
       code: '',
       originalQuantity: 0,
       quantityLeft: 0,
@@ -37,6 +38,14 @@ export default class CreateProductionPlan extends Component {
         console.log(error);
       });
     console.log('component mounted. state:', this.state);
+  }
+
+  handleCompanyChange(event) {
+    this.setState({
+      company: this.state.companies.find(
+        (c) => c.companyName === event.target.value
+      ),
+    });
   }
 
   handleChange(event) {
@@ -104,8 +113,8 @@ export default class CreateProductionPlan extends Component {
               ref="company"
               required
               className="form-control"
-              value={this.state.company}
-              onChange={this.handleChange}
+              value={this.state.company.companyName}
+              onChange={this.handleCompanyChange}
             >
               <option value="placeholder">Select a Company</option>
 
