@@ -3,10 +3,7 @@ import axios from 'axios';
 function getCompanies() {
   return axios
     .get('http://localhost:5000/companies/')
-    .then((response) => {
-      return response;
-    })
-
+    .then((response) => response.data)
     .catch((error) => {
       console.log(error);
     });

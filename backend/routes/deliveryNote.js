@@ -3,6 +3,7 @@ let DeliveryNote = require('../models/deliveryNote.model');
 
 router.route('/').get((req, res) => {
   DeliveryNote.find()
+    .populate('company')
     .then((deliveryNote) => res.json(deliveryNote))
     .catch((err) => res.status(400).json('Error: ' + err));
 });

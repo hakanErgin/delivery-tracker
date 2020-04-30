@@ -7,6 +7,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 export default class EditProductionPlan extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props);
+    console.log(props);
 
     this.handleChange = this.handleChange.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
@@ -31,9 +33,8 @@ export default class EditProductionPlan extends Component {
     axios
       .get(`http://localhost:5000/production-plan/${this.state.id}`)
       .then((response) => {
-        console.log(response);
-
         this.setState({
+          id: this.props.match.params.id,
           productionPlanId: response.data.productionPlanId,
           code: response.data.code,
           quantity: response.data.originalQuantity,

@@ -17,7 +17,7 @@ export default class CreateProductionPlan extends Component {
 
     this.state = {
       productionPlanId: '',
-      companies: [],
+      companies: {},
       company: {},
       code: '',
       originalQuantity: 0,
@@ -26,23 +26,9 @@ export default class CreateProductionPlan extends Component {
     };
   }
 
-  componentDidMount() {
-    axios
-      .get('http://localhost:5000/companies/')
-      .then((response) => {
-        console.log('response', response);
-        this.setState({ companies: response.data });
-        console.log('state', this.state);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    console.log('component mounted. state:', this.state);
-  }
-
   handleCompanyChange(event) {
     this.setState({
-      company: this.state.companies.find(
+      company: this.props.companies.find(
         (c) => c.companyName === event.target.value
       ),
     });
@@ -118,8 +104,8 @@ export default class CreateProductionPlan extends Component {
             >
               <option value="placeholder">Select a Company</option>
 
-              {this.state.companies &&
-                this.state.companies.map(function (company) {
+              {this.props.companies &&
+                this.props.companies.map(function (company) {
                   return (
                     <option
                       key={company.companyName}

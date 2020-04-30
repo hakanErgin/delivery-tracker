@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navbar from './components/navbar.component';
 import ProductionPlanList from './components/ProductionPlans/ProductionPlanList';
@@ -19,7 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    getCompanies().then((data) => this.setState({ companies: data.data }));
+    getCompanies().then((companies) => this.setState({ companies }));
   }
 
   render() {
@@ -35,7 +35,7 @@ class App extends Component {
             <CompaniesList />
           </Route>
           <Route path="/deliverynotes">
-            <DeliveryNotesList />
+            <DeliveryNotesList companies={this.state.companies} />
           </Route>
           <Route path="/delivery-note/edit/:id">
             <EditDeliveryNotes />
@@ -43,9 +43,7 @@ class App extends Component {
           <Route path="/companies/edit/:id">
             <EditCompany />
           </Route>
-          <Route path="/edit/:id">
-            <EditProductionPlan />
-          </Route>
+          <Route path="/edit/:id" component={EditProductionPlan} />
         </div>
       </Router>
     );

@@ -1,39 +1,8 @@
-// axios
-//   .get('http://localhost:5000/production-plan/')
-//   .then((response) => {
-//     const values = { ...this.state };
-//     values.productionPlans.push(
-//       response.data
-//         .filter((prodPlan) => prodPlan.company === chosenCompany)
-//         .sort(function (a, b) {
-//           return new Date(a.date) - new Date(b.date);
-//         })
-//     );
-//     this.setState(values);
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
-
-// axios
-//   .get('http://localhost:5000/production-plan/')
-//   .then((response) => {
-//     this.setState({
-//       productionPlans: response.data
-//         .filter((prodPlan) => prodPlan.company === chosenCompany)
-//         .sort(function (a, b) {
-//           return new Date(a.date) - new Date(b.date);
-//         }),
-//     });
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
-
 import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import update from 'immutability-helper';
 
 export default class CreateDeliveryNote extends Component {
   constructor(props) {
@@ -49,7 +18,6 @@ export default class CreateDeliveryNote extends Component {
     this.state = {
       deliveryNoteId: '',
       date: new Date(),
-      companies: [],
       deliveries: [{ company: '', code: '', quantity: '', productionPlan: '' }],
       productionPlans: [],
       chosenCompanyProductionPlans: [],
@@ -58,17 +26,7 @@ export default class CreateDeliveryNote extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get('http://localhost:5000/companies/')
-      .then((response) => {
-        console.log('response', response);
-        this.setState({ companies: response.data });
-        console.log('state', this.state);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    console.log('add- state:', this.state);
+    // this.setState({ companies: this.props.companies });
   }
 
   handleChange(event) {
@@ -84,15 +42,23 @@ export default class CreateDeliveryNote extends Component {
     });
   }
 
-  handleCompanyChange(index, event) {
-    const values = { ...this.state };
-    const selectedCompany = event.target.value;
-    values.deliveries[index].company = selectedCompany;
-
-    this.setState(values);
+  async handleCompanyChange(index, event) {
+    await this.setState({
+      deliveries: update(this.state.deliveries, {
+        [index]: {
+          company: {
+            $set: this.props.companies.find(
+              (c) => c.companyName === event.target.value
+            ),
+          },
+        },
+      }),
+    });
 
     axios
-      .get(`http://localhost:5000/production-plan/company/${selectedCompany}`)
+      .get(
+        `http://localhost:5000/production-plan/company/${this.state.deliveries[index].company._id}`
+      )
       .then((response) => {
         console.log(response);
 
@@ -135,6 +101,19 @@ export default class CreateDeliveryNote extends Component {
     this.setState(values);
   }
 
+  getSelectedProductionPlan(index) {
+    return this.state.chosenCompanyProductionPlans[index].filter(
+      (productionPlan) => productionPlan.code === this.state.codes[index]
+    );
+  }
+
+  getQuantityLeft(index) {
+    const selectedProductionPlan = this.getSelectedProductionPlan(index);
+    console.log('selectedProductionPlan', selectedProductionPlan);
+
+    return selectedProductionPlan[0] && selectedProductionPlan[0].quantityLeft;
+  }
+
   addFields() {
     const values = { ...this.state };
     values.deliveries.push({
@@ -161,19 +140,6 @@ export default class CreateDeliveryNote extends Component {
       .post('http://localhost:5000/delivery-note/add', deliveryNote)
       .then((res) => console.log(res.data))
       .then(() => (window.location = '/deliverynotes'));
-  }
-
-  getSelectedProductionPlan(index) {
-    return this.state.chosenCompanyProductionPlans[index].filter(
-      (productionPlan) => productionPlan.code === this.state.codes[index]
-    );
-  }
-
-  getQuantityLeft(index) {
-    const selectedProductionPlan = this.getSelectedProductionPlan(index);
-    console.log('selectedProductionPlan', selectedProductionPlan);
-
-    return selectedProductionPlan[0] && selectedProductionPlan[0].quantityLeft;
   }
 
   render() {
@@ -210,14 +176,13 @@ export default class CreateDeliveryNote extends Component {
                     ref="company"
                     required
                     className="form-control"
-                    value={this.state.company}
                     onChange={(event) => this.handleCompanyChange(index, event)}
                   >
                     <option value="placeholder" defaultValue>
                       Select a Company
                     </option>
-                    {this.state.companies &&
-                      this.state.companies.map(function (company) {
+                    {this.props.companies &&
+                      this.props.companies.map(function (company) {
                         return (
                           <option
                             key={company.companyName}
@@ -298,3 +263,47 @@ export default class CreateDeliveryNote extends Component {
     );
   }
 }
+
+// axios
+//   .get('http://localhost:5000/production-plan/')
+//   .then((response) => {
+//     const values = { ...this.state };
+//     values.productionPlans.push(
+//       response.data
+//         .filter((prodPlan) => prodPlan.company === chosenCompany)
+//         .sort(function (a, b) {
+//           return new Date(a.date) - new Date(b.date);
+//         })
+//     );
+//     this.setState(values);
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+// axios
+//   .get('http://localhost:5000/production-plan/')
+//   .then((response) => {
+//     this.setState({
+//       productionPlans: response.data
+//         .filter((prodPlan) => prodPlan.company === chosenCompany)
+//         .sort(function (a, b) {
+//           return new Date(a.date) - new Date(b.date);
+//         }),
+//     });
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+//   axios
+//     .get('http://localhost:5000/companies/')
+//     .then((response) => {
+//       console.log('response', response);
+//       this.setState({ companies: response.data });
+//       console.log('state', this.state);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+//   console.log('add- state:', this.state);

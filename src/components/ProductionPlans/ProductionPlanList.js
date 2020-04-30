@@ -96,7 +96,9 @@ export default class ProductionPlanList extends Component {
         <button onClick={() => this.setState({ showAddProductionPlan: true })}>
           Add New Production Plan
         </button>
-        {this.state.showAddProductionPlan && <CreateProductionPlan />}
+        {this.state.showAddProductionPlan && (
+          <CreateProductionPlan companies={this.props.companies} />
+        )}
       </div>
     );
   }

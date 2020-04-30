@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateDeliveryNote from './CreateDeliveryNotes';
@@ -6,26 +6,23 @@ import CreateDeliveryNote from './CreateDeliveryNotes';
 const DeliveryNote = (props) => (
   <>
     {props.deliveryNote.map((delivery, index) => {
-      console.log(delivery, index);
       if (index === 0)
         return (
-          <>
-            {/* <tr> */}
+          <Fragment key={index}>
             <td>{delivery.company}</td>
             <td>{delivery.code}</td>
             <td>{delivery.quantity}</td>
             <td>{delivery.productionPlan}</td>
-            {/* </tr> */}
-          </>
+          </Fragment>
         );
       else
         return (
-          <tr>
+          <Fragment key={index}>
             <td>{delivery.company}</td>
             <td>{delivery.code}</td>
             <td>{delivery.quantity}</td>
             <td>{delivery.productionPlan}</td>
-          </tr>
+          </Fragment>
         );
     })}
   </>
@@ -65,7 +62,7 @@ export default class DeliveryNoteList extends Component {
   createDeliveryNoteList() {
     return this.state.deliveryNotes.map((currentDeliveryNote, index) => {
       return (
-        <tr key={index} style={{ border: '1px black solid' }}>
+        <tr key={index}>
           <td>{currentDeliveryNote.deliveryNoteId}</td>
           <td>{currentDeliveryNote.date.substring(0, 10)}</td>
           <DeliveryNote
@@ -113,7 +110,9 @@ export default class DeliveryNoteList extends Component {
         <button onClick={() => this.setState({ showAddDeliveryNote: true })}>
           Add New Delivery Note
         </button>
-        {this.state.showAddDeliveryNote && <CreateDeliveryNote />}
+        {this.state.showAddDeliveryNote && (
+          <CreateDeliveryNote companies={this.props.companies} />
+        )}
       </div>
     );
   }
