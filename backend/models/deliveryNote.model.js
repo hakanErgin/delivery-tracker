@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const DeliverySchema = new Schema({
   company: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Company',
   },
   code: String,
@@ -18,6 +18,6 @@ const DeliveryNoteSchema = new Schema({
   delivery: [DeliverySchema],
 });
 
-const DelieveryNote = mongoose.model('DelieveryNote', DeliveryNoteSchema);
+const DeliveryNote = mongoose.model('DeliveryNote', DeliveryNoteSchema);
 
-module.exports = DelieveryNote;
+module.exports = DeliveryNote;

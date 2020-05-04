@@ -37,12 +37,14 @@ class App extends Component {
           <Route path="/deliverynotes">
             <DeliveryNotesList companies={this.state.companies} />
           </Route>
-          <Route path="/delivery-note/edit/:id">
-            <EditDeliveryNotes />
-          </Route>
-          <Route path="/companies/edit/:id">
+          <Route path="/delivery-note/edit/:id" component={EditDeliveryNotes} />
+          {/* <Route path="/delivery-note/edit/:id">
+            <EditDeliveryNotes companies={this.state.companies} />
+          </Route> */}
+          <Route path="/companies/edit/:id" component={EditCompany} />
+          {/* <Route path="/companies/edit/:id">
             <EditCompany />
-          </Route>
+          </Route> */}
           <Route path="/edit/:id" component={EditProductionPlan} />
         </div>
       </Router>

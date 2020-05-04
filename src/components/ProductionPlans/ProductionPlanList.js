@@ -43,6 +43,7 @@ export default class ProductionPlanList extends Component {
       .get('http://localhost:5000/production-plan/')
       .then((response) => {
         this.setState({ productionPlans: response.data });
+        console.log('response', response);
       })
       .catch((error) => {
         console.log(error);

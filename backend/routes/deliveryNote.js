@@ -3,13 +3,14 @@ let DeliveryNote = require('../models/deliveryNote.model');
 
 router.route('/').get((req, res) => {
   DeliveryNote.find()
-    .populate('company')
+    .populate('delivery.company')
     .then((deliveryNote) => res.json(deliveryNote))
     .catch((err) => res.status(400).json('Error: ' + err));
 });
 
 router.route('/:id').get((req, res) => {
   DeliveryNote.findById(req.params.id)
+    .populate('delivery.company')
     .then((deliveryNote) => res.json(deliveryNote))
     .catch((err) => res.status(400).json('Error: ' + err));
 });

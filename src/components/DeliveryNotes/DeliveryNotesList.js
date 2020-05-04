@@ -6,10 +6,14 @@ import CreateDeliveryNote from './CreateDeliveryNotes';
 const DeliveryNote = (props) => (
   <>
     {props.deliveryNote.map((delivery, index) => {
+      {
+        /* console.log(delivery); */
+      }
+
       if (index === 0)
         return (
           <Fragment key={index}>
-            <td>{delivery.company}</td>
+            <td>{delivery.company.companyName}</td>
             <td>{delivery.code}</td>
             <td>{delivery.quantity}</td>
             <td>{delivery.productionPlan}</td>
@@ -40,7 +44,7 @@ export default class DeliveryNoteList extends Component {
       .get('http://localhost:5000/delivery-note/')
       .then((response) => {
         this.setState({ deliveryNotes: response.data });
-        // console.log('response', response);
+        console.log('response', response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -61,6 +65,8 @@ export default class DeliveryNoteList extends Component {
 
   createDeliveryNoteList() {
     return this.state.deliveryNotes.map((currentDeliveryNote, index) => {
+      // console.log(currentDeliveryNote);
+
       return (
         <tr key={index}>
           <td>{currentDeliveryNote.deliveryNoteId}</td>

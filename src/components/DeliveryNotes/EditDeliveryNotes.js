@@ -30,16 +30,9 @@ export default class EditDeliveryNote extends Component {
     axios
       .get('http://localhost:5000/delivery-note/' + this.state.id)
       .then((response) => {
-        this.setState(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        console.log(response.data);
 
-    axios
-      .get('http://localhost:5000/companies/')
-      .then((response) => {
-        this.setState({ companies: response.data });
+        this.setState(response.data);
       })
       .catch((error) => {
         console.log(error);
