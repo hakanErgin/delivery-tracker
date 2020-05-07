@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -23,10 +24,6 @@ export default class CreateDeliveryNote extends Component {
       chosenCompanyProductionPlans: [],
       codes: [],
     };
-  }
-
-  componentDidMount() {
-    // this.setState({ companies: this.props.companies });
   }
 
   handleChange(event) {

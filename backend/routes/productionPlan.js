@@ -14,13 +14,6 @@ router.route('/company/:companyId').get((req, res) => {
   ProductionPlan.find({ company: req.params.companyId })
 
     .then((productionPlans) => res.json(productionPlans))
-    // .then((productionPlans) =>
-    //   res.json(
-    //     productionPlans.filter(
-    //       (productionPlan) => productionPlan.company === req.params.company
-    //     )
-    //   )
-    // )
     .catch((err) => res.status(400).json('Error: ' + err));
 });
 

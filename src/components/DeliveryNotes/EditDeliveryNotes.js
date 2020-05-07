@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import update from 'immutability-helper';
 
 export default class EditDeliveryNote extends Component {
   constructor(props) {
@@ -18,7 +19,6 @@ export default class EditDeliveryNote extends Component {
       id: props.match.params.id,
       deliveryNoteId: '',
       date: new Date(),
-      companies: [],
       delivery: [{ company: '', code: '', quantity: '', productionPlan: '' }],
       productionPlans: [],
       chosenCompanyProductionPlans: [],
@@ -31,8 +31,26 @@ export default class EditDeliveryNote extends Component {
       .get('http://localhost:5000/delivery-note/' + this.state.id)
       .then((response) => {
         console.log(response.data);
-
         this.setState(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios
+      .get('http://localhost:5000/production-plan/')
+      .then((response) => {
+        this.setState({ productionPlans: response.data });
+        console.log('response', response.data);
+      })
+      .then(() => {
+        const plans = this.state.productionPlans.filter((n) =>
+          this.state.delivery.some(
+            (n2) => n.company.companyName == n2.company.companyName
+          )
+        );
+        this.setState({
+          chosenCompanyProductionPlans: plans,
+        });
       })
       .catch((error) => {
         console.log(error);
@@ -53,40 +71,32 @@ export default class EditDeliveryNote extends Component {
   }
 
   handleCompanyChange(index, event) {
-    const values = { ...this.state };
-    const selectedCompany = event.target.value;
-    values.delivery[index].company = selectedCompany;
-
-    this.setState(values);
-
-    axios
-      .get(`http://localhost:5000/production-plan/company/${selectedCompany}`)
-      .then((response) => {
-        console.log(response);
-
-        let selectedProductionPlan = [];
-        response.data.map((prodPlan) => selectedProductionPlan.push(prodPlan));
-
-        const currentProdPlan = this.state.chosenCompanyProductionPlans[index];
-        // if we already have a production plan for the current index (meaning that a company has already been selected) we want to replace it instead of adding it to the array
-        if (currentProdPlan) {
-          const values = { ...this.state };
-          values.chosenCompanyProductionPlans[index] = selectedProductionPlan;
-          this.setState(values);
-        } else {
-          this.setState({
-            chosenCompanyProductionPlans: [
-              ...this.state.chosenCompanyProductionPlans,
-              selectedProductionPlan,
-            ],
-          });
+    this.setState({
+      delivery: update(this.state.delivery, {
+        [index]: {
+          company: {
+            $set: this.props.companies.find(
+              (c) => c.companyName === event.target.value
+            ),
+          },
+        },
+      }),
+    });
+    this.setState({
+      chosenCompanyProductionPlans: update(
+        this.state.chosenCompanyProductionPlans,
+        {
+          [index]: {
+            $set: this.state.productionPlans.find(
+              (p) =>
+                p.company.companyName ===
+                this.state.delivery[index].company.companyName
+            ),
+          },
         }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      ),
+    });
   }
-
   onCodeChange(index, event) {
     const values = { ...this.state };
     values.delivery[index].code = event.target.value;
@@ -181,12 +191,11 @@ export default class EditDeliveryNote extends Component {
                     ref="company"
                     required
                     className="form-control"
-                    value={this.state.company}
+                    value={this.state.delivery[index].company.companyName}
                     onChange={(event) => this.handleCompanyChange(index, event)}
                   >
-                    <option value="placeholder">Select a Company</option>
-                    {this.state.companies &&
-                      this.state.companies.map(function (company) {
+                    {this.props.companies &&
+                      this.props.companies.map(function (company) {
                         return (
                           <option
                             key={company.companyName}
@@ -198,6 +207,7 @@ export default class EditDeliveryNote extends Component {
                       })}
                   </select>
                 </div>
+
                 <div className="form-group">
                   <label>code : </label>
                   <select
@@ -208,9 +218,6 @@ export default class EditDeliveryNote extends Component {
                     value={this.state.delivery[index].code}
                     onChange={(event) => this.onCodeChange(index, event)}
                   >
-                    <option value="placeholder" defaultValue>
-                      Select a code
-                    </option>
                     {this.state.chosenCompanyProductionPlans[index] &&
                       this.state.chosenCompanyProductionPlans[index].map(
                         (chosenCompanyProductionPlan) => (
@@ -267,3 +274,56 @@ export default class EditDeliveryNote extends Component {
     );
   }
 }
+
+// axios
+//   .get(
+//     `http://localhost:5000/production-plan/company/${this.state.delivery[index].company._id}`
+//   )
+//   .then((response) => {
+//     console.log(response);
+
+//     let selectedProductionPlan = [];
+//     response.data.map((prodPlan) => selectedProductionPlan.push(prodPlan));
+
+//     const currentProdPlan = this.state.chosenCompanyProductionPlans[index];
+//     // if we already have a production plan for the current index (meaning that a company has already been selected) we want to replace it instead of adding it to the array
+//     if (currentProdPlan) {
+//       const values = { ...this.state };
+//       values.chosenCompanyProductionPlans[index] = selectedProductionPlan;
+//       this.setState(values);
+//     } else {
+//       this.setState({
+//         chosenCompanyProductionPlans: [
+//           ...this.state.chosenCompanyProductionPlans,
+//           selectedProductionPlan,
+//         ],
+//       });
+//     }
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+
+/* <div className="form-group">
+                  <label>code : </label>
+                  <select
+                    name="code"
+                    ref="code"
+                    required
+                    className="form-control"
+                    value={this.state.delivery[index].code}
+                    onChange={(event) => this.onCodeChange(index, event)}
+                  >
+                    {this.state.chosenCompanyProductionPlans[index] &&
+                      this.state.chosenCompanyProductionPlans[index].map(
+                        (chosenCompanyProductionPlan) => (
+                          <option
+                            key={chosenCompanyProductionPlan.code}
+                            value={chosenCompanyProductionPlan.code}
+                          >
+                            {chosenCompanyProductionPlan.code}
+                          </option>
+                        )
+                      )}
+                  </select>
+                </div> */

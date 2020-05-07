@@ -6,10 +6,6 @@ import CreateDeliveryNote from './CreateDeliveryNotes';
 const DeliveryNote = (props) => (
   <>
     {props.deliveryNote.map((delivery, index) => {
-      {
-        /* console.log(delivery); */
-      }
-
       if (index === 0)
         return (
           <Fragment key={index}>
@@ -22,7 +18,7 @@ const DeliveryNote = (props) => (
       else
         return (
           <Fragment key={index}>
-            <td>{delivery.company}</td>
+            <td>{delivery.company.companyName}</td>
             <td>{delivery.code}</td>
             <td>{delivery.quantity}</td>
             <td>{delivery.productionPlan}</td>
