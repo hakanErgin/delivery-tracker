@@ -42,21 +42,21 @@ export default class EditDeliveryNote extends Component {
         this.setState({ productionPlans: response.data });
         console.log('response', response.data);
       })
-      .then(() => {
-        const plans = this.state.productionPlans.filter((n) =>
-          this.state.delivery.some(
-            (n2) => n.company.companyName == n2.company.companyName
-          )
-        );
-        this.setState({
-          chosenCompanyProductionPlans: update(
-            this.state.chosenCompanyProductionPlans,
-            {
-              $set: plans,
-            }
-          ),
-        });
-      })
+      // .then(() => {
+      //   const plans = this.state.productionPlans.filter((n) =>
+      //     this.state.delivery.some(
+      //       (n2) => n.company.companyName == n2.company.companyName
+      //     )
+      //   );
+      //   this.setState({
+      //     chosenCompanyProductionPlans: update(
+      //       this.state.chosenCompanyProductionPlans,
+      //       {
+      //         $set: plans,
+      //       }
+      //     ),
+      //   });
+      // })
       .catch((error) => {
         console.log(error);
       });
