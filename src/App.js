@@ -37,10 +37,19 @@ class App extends Component {
           <Route path="/deliverynotes">
             <DeliveryNotesList companies={this.state.companies} />
           </Route>
-          <Route path="/delivery-note/edit/:id" component={EditDeliveryNotes} />
+          {/* <Route path="/delivery-note/edit/:id" component={EditDeliveryNotes} /> */}
           {/* <Route path="/delivery-note/edit/:id">
             <EditDeliveryNotes companies={this.state.companies} />
           </Route> */}
+          <Route
+            path="/delivery-note/edit/:id"
+            render={({ match }) => (
+              <EditDeliveryNotes
+                companies={this.state.companies}
+                match={match}
+              />
+            )}
+          />
           <Route path="/companies/edit/:id" component={EditCompany} />
           {/* <Route path="/companies/edit/:id">
             <EditCompany />
