@@ -49,7 +49,12 @@ export default class EditDeliveryNote extends Component {
           )
         );
         this.setState({
-          chosenCompanyProductionPlans: plans,
+          chosenCompanyProductionPlans: update(
+            this.state.chosenCompanyProductionPlans,
+            {
+              $set: plans,
+            }
+          ),
         });
       })
       .catch((error) => {
@@ -82,26 +87,25 @@ export default class EditDeliveryNote extends Component {
         },
       }),
     });
-    this.setState({
-      chosenCompanyProductionPlans: update(
-        this.state.chosenCompanyProductionPlans,
-        {
-          [index]: {
-            $set: this.state.productionPlans.find(
-              (p) =>
-                p.company.companyName ===
-                this.state.delivery[index].company.companyName
-            ),
-          },
-        }
-      ),
-    });
   }
+
   onCodeChange(index, event) {
-    const values = { ...this.state };
-    values.delivery[index].code = event.target.value;
-    values.codes[index] = event.target.value;
-    this.setState(values);
+    this.setState({
+      delivery: update(this.state.delivery, {
+        [index]: {
+          code: {
+            $set: event.target.value,
+          },
+        },
+      }),
+    });
+    this.setState({
+      codes: update(this.state.codes, {
+        [index]: {
+          $set: event.target.value,
+        },
+      }),
+    });
   }
 
   onChangeQuantity(index, event) {
@@ -145,7 +149,7 @@ export default class EditDeliveryNote extends Component {
   }
 
   getSelectedProductionPlan(index) {
-    return this.state.chosenCompanyProductionPlans[index].filter(
+    return this.state.productionPlans.filter(
       (productionPlan) => productionPlan.code === this.state.codes[index]
     );
   }
@@ -183,7 +187,7 @@ export default class EditDeliveryNote extends Component {
           </div>
           <div>
             {this.state.delivery.map((delivery, index) => (
-              <React.Fragment key={`${delivery}~${index}`}>
+              <React.Fragment key={index}>
                 <div className="form-group">
                   <label>Company : </label>
                   <select
@@ -207,7 +211,6 @@ export default class EditDeliveryNote extends Component {
                       })}
                   </select>
                 </div>
-
                 <div className="form-group">
                   <label>code : </label>
                   <select
@@ -215,20 +218,22 @@ export default class EditDeliveryNote extends Component {
                     ref="code"
                     required
                     className="form-control"
-                    value={this.state.delivery[index].code}
                     onChange={(event) => this.onCodeChange(index, event)}
                   >
-                    {this.state.chosenCompanyProductionPlans[index] &&
-                      this.state.chosenCompanyProductionPlans[index].map(
-                        (chosenCompanyProductionPlan) => (
-                          <option
-                            key={chosenCompanyProductionPlan.code}
-                            value={chosenCompanyProductionPlan.code}
-                          >
-                            {chosenCompanyProductionPlan.code}
+                    {this.state.productionPlans.map((plan) => {
+                      if (plan.code == this.state.delivery[index].code)
+                        return (
+                          <option value={plan.code} selected>
+                            {plan.code}
                           </option>
-                        )
-                      )}
+                        );
+                      else if (
+                        plan.company.companyName ==
+                        this.state.delivery[index].company.companyName
+                      )
+                        return <option value={plan.code}>{plan.code}</option>;
+                      else return null;
+                    })}
                   </select>
                 </div>
                 <div className="form-group">
@@ -265,7 +270,7 @@ export default class EditDeliveryNote extends Component {
           <div className="form-group">
             <input
               type="submit"
-              value="Create Delivery Note"
+              value="Update Delivery Note"
               className="btn btn-primary"
             />
           </div>
