@@ -3,30 +3,37 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import CreateDeliveryNote from './CreateDeliveryNotes';
 
-const DeliveryNote = (props) => (
-  <>
-    {props.deliveryNote.map((delivery, index) => {
-      if (index === 0)
-        return (
-          <Fragment key={index}>
-            <td>{delivery.company.companyName}</td>
-            <td>{delivery.code}</td>
-            <td>{delivery.quantity}</td>
-            <td>{delivery.productionPlan}</td>
-          </Fragment>
-        );
-      else
-        return (
-          <Fragment key={index}>
-            <td>{delivery.company.companyName}</td>
-            <td>{delivery.code}</td>
-            <td>{delivery.quantity}</td>
-            <td>{delivery.productionPlan}</td>
-          </Fragment>
-        );
-    })}
-  </>
-);
+const DeliveryNote = (deliveryNote) => {
+  const { id, date, deliveries, dbId, isOdd } = deliveryNote;
+
+  return deliveries.map((delivery, index) => {
+    const isNewDeliveryNote = index === 0;
+    return (
+      <tr key={dbId} style={{ backgroundColor: isOdd ? '#ececec' : 'white' }}>
+        <td>{isNewDeliveryNote && id}</td>
+        <td>{isNewDeliveryNote && date}</td>
+        <td>{delivery.company.companyName}</td>
+        <td>{delivery.code}</td>
+        <td>{delivery.quantity}</td>
+        <td>{delivery.productionPlan}</td>
+        <td>
+          {isNewDeliveryNote && (
+            <>
+              <Link to={'delivery-note/edit/' + dbId}>edit</Link>
+              <button
+                onClick={() => {
+                  this.deleteDeliveryNote(dbId);
+                }}
+              >
+                delete
+              </button>
+            </>
+          )}
+        </td>
+      </tr>
+    );
+  });
+};
 
 export default class DeliveryNoteList extends Component {
   constructor(props) {
@@ -40,7 +47,6 @@ export default class DeliveryNoteList extends Component {
       .get('http://localhost:5000/delivery-note/')
       .then((response) => {
         this.setState({ deliveryNotes: response.data });
-        console.log('response', response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -59,32 +65,25 @@ export default class DeliveryNoteList extends Component {
     });
   }
 
+  onlyFirst(content, index) {
+    if (index > 0) {
+      return '';
+    } else {
+      return content;
+    }
+  }
+
   createDeliveryNoteList() {
     return this.state.deliveryNotes.map((currentDeliveryNote, index) => {
-      // console.log(currentDeliveryNote);
-
+      console.log('currentDeliveryNote', currentDeliveryNote);
       return (
-        <tr key={index}>
-          <td>{currentDeliveryNote.deliveryNoteId}</td>
-          <td>{currentDeliveryNote.date.substring(0, 10)}</td>
-          <DeliveryNote
-            deliveryNote={currentDeliveryNote.delivery}
-            deleteDeliveryNote={this.deleteDeliveryNote}
-            key={currentDeliveryNote._id}
-          />
-          <td>
-            <Link to={'delivery-note/edit/' + currentDeliveryNote._id}>
-              edit
-            </Link>
-            <button
-              onClick={() => {
-                this.deleteDeliveryNote(currentDeliveryNote._id);
-              }}
-            >
-              delete
-            </button>
-          </td>
-        </tr>
+        <DeliveryNote
+          id={currentDeliveryNote.deliveryNoteId}
+          date={currentDeliveryNote.date.substring(0, 10)}
+          deliveries={currentDeliveryNote.delivery}
+          dbId={currentDeliveryNote._id}
+          isOdd={index % 2 === 0}
+        />
       );
     });
   }
@@ -97,7 +96,7 @@ export default class DeliveryNoteList extends Component {
       <div>
         <h3>List of Delivery Notes</h3>
         <table className="table">
-          <thead className="thead-light">
+          <thead className="thead">
             <tr>
               <th>Delivery Note Id</th>
               <th>Date</th>

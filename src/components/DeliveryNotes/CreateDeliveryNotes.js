@@ -106,7 +106,6 @@ export default class CreateDeliveryNote extends Component {
 
   getQuantityLeft(index) {
     const selectedProductionPlan = this.getSelectedProductionPlan(index);
-    console.log('selectedProductionPlan', selectedProductionPlan);
 
     return selectedProductionPlan[0] && selectedProductionPlan[0].quantityLeft;
   }
@@ -128,7 +127,7 @@ export default class CreateDeliveryNote extends Component {
     const deliveryNote = {
       deliveryNoteId: this.state.deliveryNoteId,
       date: this.state.date,
-      delivery: [...this.state.deliveries],
+      delivery: this.state.deliveries,
     };
 
     console.log(deliveryNote);
