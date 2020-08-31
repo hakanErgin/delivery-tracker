@@ -1,15 +1,26 @@
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
 const initialState = {
-  companies: localStorage.getItem('companies'),
+  companies: [],
 };
 
 const companiesReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CREATE_COMPANY':
-      return [...state, action.payload];
-
+      return {
+        ...state,
+        companies: [...state.companies, action.payload],
+      };
     default:
       return state;
   }
 };
 
-export default companiesReducer;
+const persistConfig = {
+  key: 'COMPANIES',
+  storage,
+  version: 0,
+};
+
+export default persistReducer(persistConfig, companiesReducer);
