@@ -10,8 +10,11 @@ import rootReducer from './reducers/index';
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancer(applyMiddleware(thunk)));
-const persistor = persistStore(store);
+export const store = createStore(
+  rootReducer,
+  composeEnhancer(applyMiddleware(thunk))
+);
+export const persistor = persistStore(store);
 
 render(
   <Provider store={store}>
