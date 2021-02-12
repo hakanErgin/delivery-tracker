@@ -8,7 +8,7 @@ export default class EditDeliveryNote extends Component {
   constructor(props) {
     super(props);
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleIdChange = this.handleIdChange.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.handleCompanyChange = this.handleCompanyChange.bind(this);
@@ -42,27 +42,12 @@ export default class EditDeliveryNote extends Component {
         this.setState({ productionPlans: response.data });
         console.log('response', response.data);
       })
-      .then(() => {
-        const plans = this.state.productionPlans.filter((n) =>
-          this.state.delivery.some(
-            (n2) => n.company.companyName == n2.company.companyName
-          )
-        );
-        this.setState({
-          chosenCompanyProductionPlans: update(
-            this.state.chosenCompanyProductionPlans,
-            {
-              $set: plans,
-            }
-          ),
-        });
-      })
       .catch((error) => {
         console.log(error);
       });
   }
 
-  handleChange(event) {
+  handleIdChange(event) {
     this.setState({
       [event.target.name]: event.target.value,
     });
@@ -173,7 +158,7 @@ export default class EditDeliveryNote extends Component {
               type="text"
               className="form-control"
               value={this.state.deliveryNoteId}
-              onChange={this.handleChange}
+              onChange={this.handleIdChange}
             />
           </div>
           <div className="form-group">
@@ -332,3 +317,19 @@ export default class EditDeliveryNote extends Component {
                       )}
                   </select>
                 </div> */
+
+// .then(() => {
+//   const plans = this.state.productionPlans.filter((n) =>
+//     this.state.delivery.some(
+//       (n2) => n.company.companyName == n2.company.companyName
+//     )
+//   );
+//   this.setState({
+//     chosenCompanyProductionPlans: update(
+//       this.state.chosenCompanyProductionPlans,
+//       {
+//         $set: plans,
+//       }
+//     ),
+//   });
+// })
